@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KIPS College Trip Management</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root{--bg:#f1f4fa;--card:#fff;--tx:#12203a;--mut:#667391;--bd:#e0e6f1;--pri:#1e40af;--ok:#15803d;--okb:#dcfce7;--pt:#2563eb;--ptb:#dbeafe;--no:#b45309;--nob:#fef3c7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1222;--card:#161e34;--tx:#e8ecf7;--mut:#93a0bd;--bd:#26304c;--pri:#4f7bff;--ok:#4ade80;--okb:#10301d;--pt:#7aa2ff;--ptb:#16254d;--no:#fbbf24;--nob:#3a2a0a}}
+:root[data-theme="dark"]{--bg:#0c1222;--card:#161e34;--tx:#e8ecf7;--mut:#93a0bd;--bd:#26304c;--pri:#4f7bff;--ok:#4ade80;--okb:#10301d;--pt:#7aa2ff;--ptb:#16254d;--no:#fbbf24;--nob:#3a2a0a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14.5px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.top{background:linear-gradient(120deg,#0b1f5c,#1e40af);color:#fff;padding:14px 18px}
+.in{max-width:1200px;margin:auto}.top .in{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.lg{display:flex;gap:12px;align-items:center}.lg i{width:42px;height:42px;border-radius:50%;background:#fff;color:#1e40af;display:grid;place-items:center;font:800 18px system-ui}
+.lg b{font-size:17px;display:block}.lg span{font-size:12.5px;opacity:.85}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav button{background:transparent;border:0;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font:inherit;opacity:.8}nav button.on{background:rgba(255,255,255,.18);opacity:1;font-weight:600}
+main{max-width:1200px;margin:auto;padding:16px}
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:7px 13px;border-radius:8px;cursor:pointer;font:inherit}.btn.pri{background:var(--pri);color:#fff;border-color:var(--pri)}.btn.pay{background:var(--ok);color:#fff;border-color:var(--ok);font-weight:600}.btn.wa{background:#25d366;color:#fff;border-color:#25d366;font-weight:600}.btn.sm{padding:4px 9px;font-size:12.5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}.grid .card{margin:0;border-left:4px solid var(--pri)}
+.k{color:var(--mut);font-size:12.5px}.v{font-size:23px;font-weight:700}.ok{color:var(--ok)}.no{color:var(--no)}.pt{color:var(--pt)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.bar{height:7px;background:var(--bd);border-radius:6px;overflow:hidden;min-width:80px}.bar i{display:block;height:100%;background:var(--ok)}
+.sc{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:8px 9px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}th{font-size:11.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.3px}
+tr.lnk{cursor:pointer}tr.lnk:hover{background:var(--bg)}
+.pill{padding:2px 9px;border-radius:20px;font-size:12px;font-weight:600}.pill.ok{background:var(--okb);color:var(--ok)}.pill.pt{background:var(--ptb);color:var(--pt)}.pill.no{background:var(--nob);color:var(--no)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px;align-items:center}.chip{padding:5px 11px;border:1px solid var(--bd);border-radius:20px;background:var(--card);color:var(--tx);cursor:pointer;font:inherit;font-size:13px}.chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+input,select{padding:7px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);font:inherit}td input{width:135px;padding:4px 7px;font-size:13px}td select{padding:4px;font-size:13px}
+.don{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;position:relative}.don:after{content:"";position:absolute;inset:16px;background:var(--card);border-radius:50%}.don b{position:relative;z-index:1;font-size:20px}
+.two{display:grid;grid-template-columns:1fr 2fr;gap:14px}@media(max-width:760px){.two{grid-template-columns:1fr}}
+.lgd{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;margin-top:10px}
+.bg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}.seats{display:grid;grid-template-columns:repeat(13,1fr);gap:3px;margin:8px 0}.seats i{height:11px;border-radius:3px;background:var(--bd)}.seats i.f{background:var(--ok)}
+.bl{display:flex;justify-content:space-between;gap:6px;padding:4px 0;border-bottom:1px solid var(--bd);font-size:13px}.bl small{color:var(--mut)}.bx{max-height:230px;overflow:auto}
+label{display:block;margin:8px 0;font-size:13px;color:var(--mut)}label input,label select{display:block;width:100%;margin-top:3px}
+#modal{position:fixed;inset:0;background:rgba(5,10,25,.6);display:none;align-items:flex-start;justify-content:center;padding:16px;z-index:50;overflow:auto}
+.mc{background:var(--card);border-radius:12px;max-width:440px;width:100%;padding:20px}.mc h3{margin:0 0 8px}
+.rc{background:#fff;color:#111;border:2px solid #1e40af;border-radius:6px;max-width:460px;width:100%;padding:18px;margin:auto}
+.rh{text-align:center;border-bottom:2px solid #1e40af;padding-bottom:8px}.rh b{font-size:17px;color:#1e40af}.rh span{font-size:12px;color:#555}
+.rt{text-align:center;font-weight:700;letter-spacing:2px;margin:10px 0 2px;font-size:13px}
+.rc dl{display:grid;grid-template-columns:118px 1fr;gap:4px 8px;margin:8px 0;font-size:13px}.rc dt{color:#555}.rc dd{margin:0;font-weight:600}
+.amt{text-align:center;font-size:25px;font-weight:800;background:#eef3ff;padding:8px;margin:8px 0;border-radius:6px}.amt small{display:block;font-size:11px;font-weight:500;color:#555}
+.stp{text-align:center;font-weight:800;letter-spacing:2px;color:#15803d;border:2px solid #15803d;border-radius:6px;padding:4px;margin:8px auto;width:max-content}.stp.p{color:#2563eb;border-color:#2563eb}
+.sig{display:flex;justify-content:space-between;margin-top:32px;font-size:11.5px;color:#555}.sig span{border-top:1px solid #555;padding-top:3px}
+.tools{max-width:460px;margin:12px auto 0;background:var(--card);border-radius:10px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.tools input{flex:1;min-width:170px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111;color:#fff;padding:9px 16px;border-radius:9px;display:none;z-index:60}
+@media print{.top,main,.noprint,#toast{display:none!important}body{background:#fff}#modal{position:static;background:none;display:block!important;padding:0}}
+.warn{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:10px;padding:10px 14px;margin-bottom:14px}.warn.inf{background:var(--ptb);color:var(--pt);border-color:var(--pt)}.bdg{font-size:12px;padding:4px 10px;border-radius:12px;background:rgba(255,255,255,.18);align-self:center;color:#fff}
+#login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px;z-index:80}
+</style></head><body>
+<div class="top"><div class="in"><div class="lg"><i>K</i><div><b>KIPS College Sheikhupura (Boys)</b><span id="sub"></span></div></div>
+<nav id="nav"></nav></div></div>
+<main id="main"></main>
+<div id="login"><div class="mc"><h3>KIPS College Trip System – Staff Login</h3><label>Email<input id="le" type="email" autocomplete="username"></label><label>Password<input id="lp" type="password" autocomplete="current-password"></label><p id="lerr" style="color:#b91c1c;font-size:13px"></p><button class="btn pri" data-a="login">Sign in</button></div></div>
+<div id="modal"><div id="mb" style="width:100%"></div></div><div id="toast"></div>
+<script>
+let D=[],D0=[],OUT=[];
+const M={payments:{},info:{},cfg:{}};const LK='kipsTripV2';let db=null,cloud=0,L=null,view='dash',cy=1,q='',flt='all',BC={};
+let SEC=[1,2,3].map(y=>({y,l:[]})),cs='';const rebuild=()=>{D=D0.concat(OUT);mk();render()},mk=()=>{SEC=[1,2,3].map(y=>({y,l:[...new Set(D.filter(s=>s.y==y).map(s=>s.s))]}));if(!cs&&SEC[0].l[0])cs=SEC[0].l[0]};
+const $=i=>document.getElementById(i),esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const C=()=>({fee:16000,trip:'Educational Trip',dest:'',date:'',buses:4,cap:25,inc:{},...(M.cfg.main||{})});
+const rs=n=>'Rs '+Math.round(n).toLocaleString('en-US'),yn=y=>y==1?'1st Year':y==2?'2nd Year':'Outsiders',cls2=s=>s.y==3?'Outsider':yn(s.y)+' · '+s.s,S=k=>D.find(x=>x.k==k);
+const pays=k=>(M.payments[k]||{}).pays||[],paid=k=>pays(k).reduce((a,p)=>a+p.a,0),info=k=>M.info[k]||{};
+const st=k=>{const p=paid(k);return p>=C().fee?'Paid':p>0?'Partial':'Pending'},CL={Paid:'ok',Partial:'pt',Pending:'no'};
+const bar=p=>`<div class="bar"><i style="width:${Math.min(100,p)}%"></i></div>`;
+const fdt=t=>new Date(t).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const cl=x=>String(x==null?'':x).replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim();let seenK={};
+function parseXl(wb){const out=[];wb.SheetNames.forEach(sn=>{const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:''});
+ const h=rows.findIndex(r=>r.some(c=>/roll/i.test(cl(c))));if(h<0)return;const H=rows[h].map(c=>cl(c).toLowerCase());
+ const iR=H.findIndex(c=>c.includes('roll')),iF=H.findIndex(c=>c.includes('father')),iN=H.findIndex(c=>c.includes('name')&&!c.includes('father'));
+ const y=iF>=0?1:2,sec=sn.replace(/\s+/g,'').replace(/-/g,'').replace(/^([A-Za-z]+)(\d.*)$/,'$1-$2').toUpperCase();
+ rows.slice(h+1).forEach(r=>{if(typeof r[0]!=='number')return;const ro=cl(r[iR]),n=cl(r[iN]);if(!ro||!n)return;let k=ro.replace(/[^A-Za-z0-9-]/g,'');if(seenK[k])k+='-'+sec.replace(/[^A-Za-z0-9]/g,'');seenK[k]=1;out.push({k,y,s:sec,r:ro,n,f:iF>=0?cl(r[iF]):''})})});return out}
+function outModal(k){const o=k?S(k):{};modal(`<div class="mc" style="margin:auto"><h3>${k?'Edit':'Add'} outsider student</h3>
+<label>Student name *<input id="on" value="${esc(o.n||'')}"></label><label>Father name *<input id="of" value="${esc(o.f||'')}"></label><label>Contact / WhatsApp no. *<input id="op" type="tel" value="${esc(k?info(k).ph||o.ph||'':'')}" placeholder="03xx xxxxxxx"></label><label>Reference (who referred) *<input id="orf" value="${esc(o.ref||'')}"></label>
+<div class="row" style="margin-top:12px"><button class="btn pri" data-a="outok" data-k="${k||''}">Save</button>${k?'':'<button class="btn pay" data-a="outok" data-k="" data-pay="1">Save &amp; take payment</button>'}<button class="btn" data-a="x">Cancel</button></div></div>`)}
+function saveFile(n,d){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([d],{type:'text/plain'}));a.download=n;document.body.appendChild(a);a.click();a.remove()}
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',3000)}
+function stats(a){const r={t:a.length,Paid:0,Partial:0,Pending:0,c:0};a.forEach(s=>{r[st(s.k)]++;r.c+=paid(s.k)});r.due=Math.max(0,r.t*C().fee-r.c);r.pc=r.t?Math.round(r.c/(r.t*C().fee)*100):0;return r}
+async function put(col,id,v,quiet){let ok=true;const pv=M[col][id];if(v===null)delete M[col][id];else M[col][id]=v;
+ try{if(db){const r=db.doc(col+'/'+id);v===null?await r.delete():await r.set(v);try{localStorage.setItem('kipsTripBackup',JSON.stringify(M))}catch(_){}}else localStorage.setItem(LK,JSON.stringify(M))}
+ catch(e){ok=false;if(pv===undefined)delete M[col][id];else M[col][id]=pv;toast('Save failed – only Editors can make changes')}
+ if(!quiet)render();return ok}
+const nl=()=>L?['payments','info','cfg'].reduce((n,c)=>n+Object.keys(L[c]||{}).length,0):0;
+function banner(){if(cloud<0)return `<div class="warn">⚠ <b>Database not connected.</b> Check the internet, the login account and the Firestore rules, then reload the page.</div>`;
+ if(cloud==1&&!D0.length)return `<div class="warn inf">No student list found. Go to Settings → Import student list and choose students.json.</div>`;
+ if(cloud==1&&nl())return `<div class="warn inf">☁ This device has <b>${nl()}</b> saved records that are not in the cloud database yet. <button class="btn sm pri" data-a="upl">Upload to cloud</button> <button class="btn sm" data-a="dis">Discard</button></div>`;return ''}
+const setCfg=p=>put('cfg','main',{...(M.cfg.main||{}),...p});
+function dash(){const c=C(),a=stats(D),dp=a.t?a.Paid/a.t*100:0,pp=a.t?a.Partial/a.t*100:0,used=Object.values(BC).reduce((x,y)=>x+y,0);
+ let h=`<div class="grid"><div class="card"><div class="k">Total students</div><div class="v">${a.t}</div></div><div class="card"><div class="k">Fully paid</div><div class="v ok">${a.Paid}</div></div><div class="card"><div class="k">Partial</div><div class="v pt">${a.Partial}</div></div><div class="card"><div class="k">Pending</div><div class="v no">${a.Pending}</div></div><div class="card"><div class="k">Collected</div><div class="v ok">${rs(a.c)}</div></div><div class="card"><div class="k">Outstanding</div><div class="v no">${rs(a.due)}</div></div><div class="card"><div class="k">Bus seats used</div><div class="v">${used}/${c.buses*c.cap}</div></div></div>
+ <div class="two"><div class="card"><b>Collection status</b><div class="row" style="justify-content:center;margin-top:12px"><div class="don" style="background:conic-gradient(var(--ok) 0 ${dp}%,var(--pt) ${dp}% ${dp+pp}%,var(--no) ${dp+pp}% 100%)"><b>${a.pc}%</b></div></div><div class="lgd"><span class="ok">● Paid</span><span class="pt">● Partial</span><span class="no">● Pending</span></div></div>`;
+ const rec=[];D.forEach(s=>pays(s.k).forEach((p,i)=>rec.push({s,p,i})));rec.sort((x,y)=>y.p.at.localeCompare(x.p.at));
+ h+=`<div class="card"><b>Recent payments</b><div class="sc"><table>${rec.slice(0,6).map(r=>`<tr><td>${esc(r.s.n)}<div class="k">${r.s.s} · ${r.s.r}</div></td><td>${rs(r.p.a)}</td><td class="k">${fdt(r.p.at)}</td><td><button class="btn sm" data-a="rc" data-k="${r.s.k}" data-i="${r.i}">Receipt</button></td></tr>`).join('')||'<tr><td class="k">No payments recorded yet.</td></tr>'}</table></div></div></div>`;
+ SEC.forEach(g=>{if(!g.l.length)return;const y=stats(D.filter(s=>s.y==g.y));h+=`<div class="card"><div class="row"><b>${yn(g.y)} – section-wise report</b><span class="k">${y.Paid} paid · ${y.Partial} partial · ${rs(y.c)} collected</span></div><div class="sc"><table><tr><th>Section</th><th>Class Incharge</th><th>Students</th><th>Paid</th><th>Partial</th><th>Pending</th><th>Collected</th><th>Outstanding</th><th>Progress</th></tr>`;
+  g.l.forEach(s=>{const x=stats(D.filter(d=>d.y==g.y&&d.s==s));h+=`<tr class="lnk" data-a="sec" data-y="${g.y}" data-s="${s}"><td><b>${s}</b></td><td>${esc(c.inc[g.y+'|'+s])||'<span class="k">—</span>'}</td><td>${x.t}</td><td>${x.Paid}</td><td>${x.Partial}</td><td>${x.Pending}</td><td>${rs(x.c)}</td><td>${rs(x.due)}</td><td style="min-width:110px">${bar(x.pc)}</td></tr>`});h+=`</table></div></div>`});
+ return h}
+function secs(){const c=C();let h='';SEC.forEach(g=>{if(!g.l.length)return;h+=`<div class="chips"><span class="k">${yn(g.y)}:</span>`+g.l.map(s=>`<button class="chip ${g.y==cy&&s==cs?'on':''}" data-a="sec" data-y="${g.y}" data-s="${s}">${s}</button>`).join('')+`</div>`});
+ const all=D.filter(s=>s.y==cy&&s.s==cs).sort((a,b)=>a.r.localeCompare(b.r,undefined,{numeric:true})),x=stats(all),ql=q.toLowerCase();
+ const L=all.filter(s=>(flt=='all'||st(s.k)==flt)&&(!ql||(s.n+s.r+s.f).toLowerCase().includes(ql)));
+ h+=`<div class="card"><div class="row"><div><b style="font-size:17px">${cy==3?'Outsiders':yn(cy)+' · '+cs}</b><div class="k">${x.t} students · ${x.Paid} paid · ${x.Partial} partial · ${x.Pending} pending · ${rs(x.c)} collected</div></div>
+ <label style="margin:0;${cy==3?'display:none':''}">Class Incharge<input data-c="inc" value="${esc(c.inc[cy+'|'+cs]||'')}" placeholder="Enter incharge name"></label></div>
+ <div class="row" style="margin-top:10px"><input type="search" id="q" placeholder="Search name / roll no" value="${esc(q)}"><select data-c="flt">${['all','Paid','Partial','Pending'].map(f=>`<option ${f==flt?'selected':''} value="${f}">${f=='all'?'All students':f}</option>`).join('')}</select></div></div>
+ <div class="card sc"><table><tr><th>#</th><th>Roll No</th><th>Student</th>${cy!=2?'<th>Father</th>':''}${cy==3?'<th>Reference</th>':''}<th>${cy==3?'Contact':'WhatsApp'}</th><th>Bus</th><th>Paid</th><th>Balance</th><th>Status</th><th>Action</th></tr>`;
+ L.forEach(s=>{const k=s.k,p=paid(k),b=Math.max(0,c.fee-p),sb=info(k).bus||0;
+  h+=`<tr><td>${all.indexOf(s)+1}</td><td>${esc(s.r)}</td><td><b>${esc(s.n)}</b></td>${cy!=2?`<td>${esc(s.f)}</td>`:''}${cy==3?`<td>${esc(s.ref)}</td>`:''}<td><input data-c="ph" data-k="${k}" value="${esc(info(k).ph||'')}" placeholder="03xx xxxxxxx"></td>
+  <td><select data-c="bus" data-k="${k}"><option value="0">—</option>${Array.from({length:c.buses},(_,i)=>i+1).map(n=>`<option value="${n}" ${n==sb?'selected':''} ${(BC[n]||0)>=c.cap&&n!=sb?'disabled':''}>Bus ${n} (${BC[n]||0}/${c.cap})</option>`).join('')}</select></td>
+  <td>${rs(p)}</td><td>${rs(b)}</td><td><span class="pill ${CL[st(k)]}">${st(k)}</span></td>
+  <td>${b?`<button class="btn sm pay" data-a="pay" data-k="${k}">${p?'Pay balance':'Pay '+rs(c.fee)}</button>`:''} ${p?`<button class="btn sm" data-a="rc" data-k="${k}" data-i="${pays(k).length-1}">Receipt</button>`:''} ${cy==3?`<button class="btn sm" data-a="editout" data-k="${k}">Edit</button>${p?'':` <button class="btn sm" data-a="delout" data-k="${k}">Delete</button>`}`:''}</td></tr>`});
+ return h+`</table>${L.length?'':'<p class="k">No student found.</p>'}</div>`}
+function buses(){const c=C(),used=Object.values(BC).reduce((x,y)=>x+y,0),un=D.filter(s=>!info(s.k).bus);
+ let h=`<div class="card"><div class="row"><div><b style="font-size:17px">Bus allocation</b><div class="k">${c.buses} buses · ${used}/${c.buses*c.cap} seats filled · ${c.cap} seats per bus</div></div>
+ <div class="row"><input id="bq" list="dl" placeholder="Search student to add" style="width:230px"><select id="bs">${Array.from({length:c.buses},(_,i)=>i+1).map(n=>`<option value="${n}">Bus ${n} (${BC[n]||0}/${c.cap})</option>`).join('')}</select><button class="btn pri" data-a="busadd">Add to bus</button><button class="btn" data-a="addbus">+ Add bus</button>${c.buses>1&&!BC[c.buses]?`<button class="btn" data-a="rmbus">Remove last bus</button>`:''}</div></div></div>
+ <datalist id="dl">${un.map(s=>`<option value="${esc(s.r+' · '+s.n)}">`).join('')}</datalist><div class="bg">`;
+ for(let b=1;b<=c.buses;b++){const l=D.filter(s=>info(s.k).bus==b).sort((x,y)=>x.s.localeCompare(y.s)||x.r.localeCompare(y.r,undefined,{numeric:true})),n=l.length;
+  h+=`<div class="card"><div class="row"><b>Bus ${b}</b><span class="pill ${n>=c.cap?'no':'ok'}">${n}/${c.cap}${n>=c.cap?' · Full':''}</span></div><div class="seats">${Array.from({length:c.cap},(_,i)=>`<i class="${i<n?'f':''}"></i>`).join('')}</div><div class="bx">${l.map((s,i)=>`<div class="bl"><span>${i+1}. ${esc(s.n)} <small>${s.s} · ${esc(s.r)}</small></span><button class="btn sm" data-a="busrm" data-k="${s.k}">✕</button></div>`).join('')||'<div class="k">No students assigned.</div>'}</div></div>`}
+ return h+`</div>`}
+function sett(){const c=C();return `<div class="card" style="max-width:520px"><b style="font-size:17px">Trip settings</b><label>Trip name<input id="s1" value="${esc(c.trip)}"></label><label>Destination<input id="s2" value="${esc(c.dest)}"></label><label>Trip date<input id="s3" type="date" value="${esc(c.date)}"></label><label>Fee per student (Rs)<input id="s4" type="number" min="1" value="${c.fee}"></label><label>Seats per bus<input id="s5" type="number" min="1" value="${c.cap}"></label><button class="btn pri" data-a="savecfg">Save settings</button><p class="k">Class incharge names are entered inside each section (Sections tab).</p></div><div class="card" style="max-width:520px"><b style="font-size:17px">Data &amp; backup</b><p class="k">${cloud==1?'Your data is stored in the cloud database and is the same on every phone that opens this link.':'Cloud database is not connected – data is only on this device.'}</p><button class="btn" data-a="bk">Download backup (JSON)</button><label>Restore from backup<input type="file" accept=".json" data-c="rf"></label><label>Import student list – choose both Excel files (1st year + 2nd year) together<input type="file" accept=".xlsx,.json" multiple data-c="imp"></label></div>`}
+function render(){const c=C();BC={};D.forEach(s=>{const b=info(s.k).bus;if(b)BC[b]=(BC[b]||0)+1});
+ $('sub').textContent='Sargodha Road Campus · '+c.trip+(c.dest?' · '+c.dest:'')+(c.date?' · '+new Date(c.date).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'');
+ $('nav').innerHTML=[['dash','Dashboard'],['sec','Sections'],['bus','Buses'],['set','Settings']].map(v=>`<button class="${view==v[0]?'on':''}" data-a="v" data-v="${v[0]}">${v[1]}</button>`).join('')+'<button data-a="addout">+ Outsider</button><button data-a="csv">⬇ Report</button><button data-a="out">Sign out</button><span class="bdg">'+(cloud==1?'☁ Cloud synced':cloud<0?'⚠ This device only':'… Connecting')+'</span>';
+ const f=document.activeElement&&document.activeElement.id=='q';
+ $('main').innerHTML=banner()+{dash,sec:secs,bus:buses,set:sett}[view]();
+ if(f){const e=$('q');e.focus();e.setSelectionRange(e.value.length,e.value.length)}}
+const modal=h=>{$('mb').innerHTML=h;$('modal').style.display='flex'},close=()=>$('modal').style.display='none';
+function payModal(k){const s=S(k),f=C().fee,b=f-paid(k);
+ modal(`<div class="mc" style="margin:auto"><h3>Record payment</h3><b>${esc(s.n)}</b><div class="k">${esc(s.r)} · ${cls2(s)}</div><p class="k">Fee ${rs(f)} · Paid ${rs(paid(k))} · Balance ${rs(b)}</p>
+ <label>Amount received (Rs) – partial payment allowed<input id="pa" type="number" min="1" max="${b}" value="${b}"></label><label>Method<select id="pm"><option>Cash</option><option>Bank Transfer</option><option>Easypaisa</option><option>JazzCash</option></select></label>
+ <div class="row" style="margin-top:12px"><button class="btn pay" data-a="payok" data-k="${k}">Confirm &amp; Generate Receipt</button><button class="btn" data-a="x">Cancel</button></div></div>`)}
+const normPh=t=>{let n=String(t).replace(/\D/g,'');if(n[0]=='0')n='92'+n.slice(1);else if(n.length==10&&n[0]=='3')n='92'+n;return /^92\d{10}$/.test(n)?n:''};
+function waMsg(k,i){const s=S(k),p=pays(k)[i],c=C(),pd=paid(k);return `Assalam o Alaikum,\nPayment received – ${c.trip}${c.dest?' ('+c.dest+')':''}\n\nStudent: ${s.n}\nRoll No: ${s.r}\nClass: ${cls2(s)}\nReceipt No: ${p.rc}\nAmount received: ${rs(p.a)}\nTotal paid: ${rs(pd)}\nBalance: ${rs(Math.max(0,c.fee-pd))}\n\nThank you.\nKIPS College Sheikhupura (Boys), Sargodha Road Campus`}
+function showRc(k,i){const s=S(k),ps=pays(k),p=ps[i];if(!p)return;const c=C(),pd=paid(k),bal=Math.max(0,c.fee-pd),b=info(k).bus,inc=c.inc[s.y+'|'+s.s];
+ modal(`<div class="rc"><div class="rh"><b>KIPS College Sheikhupura (Boys)</b><br><span>Sargodha Road Campus</span></div><div class="rt">TRIP PAYMENT RECEIPT</div>
+ <dl><dt>Receipt No</dt><dd>${esc(p.rc)}</dd><dt>Date</dt><dd>${fdt(p.at)}</dd><dt>Trip</dt><dd>${esc(c.trip)}${c.dest?' – '+esc(c.dest):''}</dd><dt>Student Name</dt><dd>${esc(s.n)}</dd>${s.f?`<dt>Father Name</dt><dd>${esc(s.f)}</dd>`:''}<dt>Roll No</dt><dd>${esc(s.r)}</dd><dt>Class / Section</dt><dd>${cls2(s)}</dd>${s.ref?`<dt>Reference</dt><dd>${esc(s.ref)}</dd>`:''}${inc?`<dt>Class Incharge</dt><dd>${esc(inc)}</dd>`:''}${b?`<dt>Bus</dt><dd>Bus ${b}</dd>`:''}<dt>Payment Method</dt><dd>${esc(p.m)}</dd></dl>
+ <div class="amt"><small>Amount received</small>${rs(p.a)}</div><dl><dt>Total trip fee</dt><dd>${rs(c.fee)}</dd><dt>Total paid</dt><dd>${rs(pd)}</dd><dt>Balance</dt><dd>${rs(bal)}</dd></dl>
+ <div class="stp ${bal?'p':''}">${bal?'PARTIAL PAYMENT':'FULLY PAID'}</div><div class="sig"><span>Student / Guardian</span><span>Trip Incharge</span></div></div>
+ <div class="tools noprint">${ps.length>1?ps.map((q,j)=>`<button class="chip ${j==i?'on':''}" data-a="rc" data-k="${k}" data-i="${j}">#${j+1} ${rs(q.a)}</button>`).join(''):''}
+ <input id="wph" value="${esc(info(k).ph||'')}" placeholder="WhatsApp no. 03xx xxxxxxx"><button class="btn wa" data-a="wa" data-k="${k}" data-i="${i}">Send on WhatsApp</button><button class="btn pri" data-a="print">Print / PDF</button><button class="btn" data-a="x">Close</button><button class="btn" data-a="undo" data-k="${k}" data-i="${i}">Cancel this payment</button></div>`)}
+document.addEventListener('click',async e=>{const t=e.target.closest('[data-a]');if(!t)return;const d=t.dataset,a=d.a,c=C();
+ if(a=='v'){view=d.v;render();scrollTo(0,0)}
+ else if(a=='sec'){cy=+d.y;cs=d.s;view='sec';q='';flt='all';render();scrollTo(0,0)}
+ else if(a=='pay')payModal(d.k);
+ else if(a=='payok'){const amt=Math.round(+$('pa').value),b=c.fee-paid(d.k);if(!(amt>0&&amt<=b))return toast('Enter an amount between 1 and '+b);
+  const ps=pays(d.k),now=new Date(),rc='TRP-'+now.toISOString().slice(2,10).replace(/-/g,'')+'-'+S(d.k).r.replace(/\D/g,'').slice(-5)+'-'+(ps.length+1);
+  if(await put('payments',d.k,{pays:[...ps,{a:amt,at:now.toISOString(),rc,m:$('pm').value}]}))showRc(d.k,ps.length)}
+ else if(a=='rc')showRc(d.k,+d.i);
+ else if(a=='x')close();else if(a=='print')window.print();
+ else if(a=='undo'){if(!confirm('Cancel this payment record?'))return;const ps=pays(d.k).filter((_,j)=>j!=d.i);close();await put('payments',d.k,ps.length?{pays:ps}:null)}
+ else if(a=='wa'){const ph=$('wph').value,n=normPh(ph);if(!n)return toast('Enter a valid WhatsApp number (e.g. 0300 1234567)');
+  if(ph!=info(d.k).ph)put('info',d.k,{...info(d.k),ph});window.open('https://wa.me/'+n+'?text='+encodeURIComponent(waMsg(d.k,+d.i)),'_blank')}
+ else if(a=='addbus')setCfg({buses:c.buses+1});else if(a=='rmbus')setCfg({buses:c.buses-1});
+ else if(a=='busrm')put('info',d.k,{...info(d.k),bus:0});
+ else if(a=='busadd'){const s=D.find(x=>x.r+' · '+x.n==$('bq').value);if(!s)return toast('Choose a student from the list');const b=+$('bs').value;if((BC[b]||0)>=c.cap)return toast('Bus '+b+' is full');put('info',s.k,{...info(s.k),bus:b})}
+ else if(a=='savecfg'){await setCfg({trip:$('s1').value.trim()||'Educational Trip',dest:$('s2').value.trim(),date:$('s3').value,fee:Math.max(1,+$('s4').value||16000),cap:Math.max(1,+$('s5').value||25)});toast('Settings saved')}
+ else if(a=='out')auth.signOut();
+ else if(a=='addout')outModal('');else if(a=='editout')outModal(d.k);
+ else if(a=='outok'){const n=$('on').value.trim(),f=$('of').value.trim(),ph=$('op').value.trim(),ref=$('orf').value.trim();if(!n||!f||!ph||!ref)return toast('Please fill all four fields');if(!normPh(ph))return toast('Enter a valid contact number (e.g. 0300 1234567)');
+  let id=d.k,no=id?S(id).no:Math.max(0,...OUT.map(x=>x.no))+1;if(!id)id='o'+Date.now().toString(36);
+  try{await db.doc('outsiders/'+id).set({n,f,ref,ph,no,at:new Date().toISOString()});await put('info',id,{...info(id),ph},true);cy=3;cs='OUTSIDERS';view='sec';q='';flt='all';close();render();toast('Outsider saved');if(d.pay&&S(id))payModal(id)}catch(_){toast('Save failed – check your login')}}
+ else if(a=='delout'){if(pays(d.k).length)return toast('Cancel the payments first');if(!confirm('Delete this outsider?'))return;try{await db.doc('outsiders/'+d.k).delete();await put('info',d.k,null,true);render()}catch(_){toast('Delete failed')}}
+ else if(a=='login'){if(!auth)return;$('lerr').textContent='';auth.signInWithEmailAndPassword($('le').value.trim(),$('lp').value).catch(()=>$('lerr').textContent='Wrong email or password')}
+ else if(a=='upl'){try{for(const col of ['payments','info','cfg'])for(const [id,v] of Object.entries(L[col]||{}))if(!M[col][id])await db.doc(col+'/'+id).set(v);localStorage.removeItem(LK);L=null;toast('Uploaded to cloud database')}catch(_){toast('Upload failed – you need Editor access')}render()}
+ else if(a=='dis'){if(confirm('Delete the records saved only on this device?')){localStorage.removeItem(LK);L=null;render()}}
+ else if(a=='bk'){saveFile('trip_backup_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({...M,outsiders:OUT.map(o=>({id:o.k,n:o.n,f:o.f,ref:o.ref,ph:o.ph,no:o.no}))}))}
+ else if(a=='csv'){const r=[['Year','Section','Class Incharge','Roll No','Student','Father','WhatsApp','Bus','Paid','Balance','Status','Reference']];
+  D.forEach(s=>r.push([yn(s.y),s.s,c.inc[s.y+'|'+s.s]||'',s.r,s.n,s.f,info(s.k).ph||'',info(s.k).bus||'',paid(s.k),Math.max(0,c.fee-paid(s.k)),st(s.k),s.ref||'']));
+  const csv='\ufeff'+r.map(x=>x.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  saveFile('trip_report.csv',csv)}});
+document.addEventListener('input',e=>{if(e.target.id=='q'){q=e.target.value;render()}});
+document.addEventListener('change',e=>{const t=e.target,d=t.dataset;if(!d.c)return;
+ if(d.c=='imp'){const fs=[...t.files];if(!fs.length)return;(async()=>{try{seenK={};const a=[];for(const f of fs){if(/\.json$/i.test(f.name))a.push(...JSON.parse(await f.text()));else a.push(...parseXl(XLSX.read(await f.arrayBuffer(),{type:'array'})))}
+ if(!a.length)throw 0;const g={},ord=[];a.forEach(s=>{const id=s.y+'_'+s.s;if(!g[id]){g[id]={y:s.y,s:s.s,o:ord.length,list:[]};ord.push(id)}g[id].list.push({k:s.k,r:s.r,n:s.n,f:s.f})});
+ for(const id of ord)await db.doc('students/'+id).set(g[id]);toast('Student list imported ('+a.length+' students, '+ord.length+' sections)')}catch(_){toast('Import failed – check the files and your login')}})()}
+ else if(d.c=='rf'){const f=t.files[0];if(!f)return;f.text().then(async tx=>{try{const j=JSON.parse(tx);for(const col of ['payments','info','cfg'])for(const [id,v] of Object.entries(j[col]||{}))await put(col,id,v,true);for(const o of j.outsiders||[])await db.doc('outsiders/'+o.id).set({n:o.n,f:o.f,ref:o.ref,ph:o.ph,no:o.no,at:new Date().toISOString()});render();toast('Backup restored')}catch(_){toast('Invalid backup file')}})}
+ else if(d.c=='flt'){flt=t.value;render()}
+ else if(d.c=='inc')setCfg({inc:{...C().inc,[cy+'|'+cs]:t.value.trim()}});
+ else if(d.c=='ph')put('info',d.k,{...info(d.k),ph:t.value.trim()});
+ else if(d.c=='bus'){const b=+t.value;if(b&&(BC[b]||0)>=C().cap){toast('Bus '+b+' is full');return render()}put('info',d.k,{...info(d.k),bus:b})}});
+
+render();
+const FB={apiKey:"AIzaSyAe3ncRu7e8Zm8XzYoD72YzesU8sFI06vY",authDomain:"kips-trip2026.firebaseapp.com",projectId:"kips-trip2026",storageBucket:"kips-trip2026.firebasestorage.app",messagingSenderId:"1062070382345",appId:"1:1062070382345:web:249f3ac258052dd5a86dd8"};
+let unsub=[];const auth=(()=>{try{firebase.initializeApp(FB);return firebase.auth()}catch(e){return null}})();
+document.addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.id=='lp')document.querySelector('[data-a=login]').click()});
+if(!auth||FB.apiKey.startsWith('PASTE'))$('lerr').textContent='Firebase settings are not filled in this file yet (see setup steps).';
+else auth.onAuthStateChanged(u=>{unsub.forEach(f=>f());unsub=[];
+ if(!u){db=null;cloud=0;D=[];D0=[];OUT=[];Object.keys(M).forEach(c=>M[c]={});$('login').style.display='flex';return render()}
+ $('login').style.display='none';db=firebase.firestore();const er=()=>{cloud=-1;render()};
+ unsub.push(db.collection('students').onSnapshot(sn=>{const a=sn.docs.map(d=>d.data()).sort((x,y)=>x.o-y.o);D0=[];a.forEach(g=>g.list.forEach(s=>D0.push({...s,y:g.y,s:g.s})));rebuild()},er));
+ unsub.push(db.collection('outsiders').onSnapshot(sn=>{OUT=sn.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>a.no-b.no).map(x=>({k:x.id,y:3,s:'OUTSIDERS',r:'OUT-'+String(x.no).padStart(3,'0'),n:x.n,f:x.f,ref:x.ref,ph:x.ph,no:x.no}));rebuild()},er));
+ ['payments','info','cfg'].forEach(col=>unsub.push(db.collection(col).onSnapshot(sn=>{cloud=1;M[col]={};sn.docs.forEach(d=>M[col][d.id]=d.data());render()},er)))});
+</script></body></html>
