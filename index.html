@@ -47,20 +47,34 @@ label{display:block;margin:8px 0;font-size:13px;color:var(--mut)}label input,lab
 .warn{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:10px;padding:10px 14px;margin-bottom:14px}.warn.inf{background:var(--ptb);color:var(--pt);border-color:var(--pt)}.bdg{font-size:12px;padding:4px 10px;border-radius:12px;background:rgba(255,255,255,.18);align-self:center;color:#fff}
 #login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px;z-index:80}
 .bf{display:grid;gap:6px;margin:8px 0}.bf2{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}.mi{padding:4px 6px;font-size:12.5px}.rw{padding:6px 0;border-bottom:1px solid var(--bd)}
-.pgs{overflow:auto;padding:10px 0}.pg{width:190mm;height:275mm;margin:0 auto 12px;background:#fff;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);page-break-after:always;box-shadow:0 2px 10px rgba(0,0,0,.3)}
-.ps{border:1px dashed #666;padding:3mm 4mm;color:#111;display:flex;flex-direction:column;font-size:9.5pt;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.ph{text-align:center;border-bottom:1.5px solid #1e40af;padding-bottom:1.5mm}.ph b{display:block;color:#1e40af;font-size:11pt}.ph span{display:block;font-size:8pt}.ph em{display:block;font-size:7.5pt;color:#555;font-style:normal}
-.pb{text-align:center;line-height:1;margin:1mm 0}.pb small{font-size:8pt;letter-spacing:3px;color:#333}.pb b{display:block;font-size:34pt;color:#1e40af}
-.ps dl{display:grid;grid-template-columns:25mm 1fr;gap:1mm 2mm;margin:1mm 0;font-size:9pt}.ps dt{color:#555}.ps dd{margin:0;font-weight:700}
-.pr{display:flex;justify-content:space-around;border:1px solid #1e40af;border-radius:4px;padding:1mm;margin-top:auto}.pr span{text-align:center;font-size:7.5pt;color:#555}.pr b{display:block;font-size:12pt;color:#111}
-.pf{border-top:1px solid #999;margin-top:1.5mm;padding-top:1mm;font-size:8.5pt;text-align:center;color:#111}
-@media print{@page{size:A4;margin:10mm}.pgs{overflow:visible;padding:0}.pg{margin:0;box-shadow:none}.pg:last-child{page-break-after:auto}}
+.tls{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px;padding:8px;max-height:430px;overflow:auto}
+.tl{position:relative;border:1px solid var(--bd);background:var(--bg);border-radius:8px;padding:6px 8px;cursor:pointer;font-size:12px;line-height:1.3;min-height:52px}.tl:hover{border-color:var(--pri)}
+.tl b,.tl small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tl small{color:var(--mut);font-size:10.5px}.tl i{display:block;font-style:normal;font-size:10px;color:var(--pri)}
+.tx{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;border:0;background:#dc2626;color:#fff;font-size:11px;line-height:20px;padding:0;cursor:pointer;opacity:0;transition:.15s}.tl:hover .tx{opacity:1}@media(hover:none){.tx{opacity:1}}
+.pgs{overflow:auto;padding:12px 0;display:flex;flex-direction:column;align-items:center;gap:14px}
+.pass{width:5.8in;height:4.1in;flex:none;color:#111;display:flex;flex-direction:column;overflow:hidden;border:1px solid #cbd5e1;break-after:page;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact;background:repeating-linear-gradient(135deg,#fff 0 12px,#f4f7fd 12px 24px)}
+.pass.p{width:4.1in;height:5.8in}
+.pt{display:flex;align-items:center;gap:.14in;padding:.13in .2in;background:linear-gradient(110deg,#0b1f5c,#1e40af);color:#fff}
+.lg2{width:.5in;height:.5in;border-radius:50%;background:#fff;color:#1e40af;display:grid;place-items:center;font:800 22px system-ui;flex:none}
+.pn1{flex:1;min-width:0}.pn1 b{display:block;font-size:14pt;letter-spacing:.5px}.pn1 span{font-size:9pt;opacity:.9}
+.tg{text-align:center;background:#f59e0b;color:#111;border-radius:8px;padding:3px 10px;flex:none}.tg small{display:block;font-size:7pt;letter-spacing:2px;font-weight:700}.tg b{font-size:15pt;letter-spacing:1px}
+.gold{height:.05in;flex:none;background:linear-gradient(90deg,#f59e0b,#fcd34d,#f59e0b)}
+.pm{flex:1;display:flex;gap:.2in;padding:.16in .22in;min-height:0}
+.bb{width:1.35in;flex:none;border-radius:12px;background:linear-gradient(160deg,#0b1f5c,#1e40af);color:#fff;text-align:center;display:flex;flex-direction:column;justify-content:center;line-height:1}
+.bb small{font-size:9pt;letter-spacing:4px}.bb b{font-size:54pt;margin:4px 0}.bb em{font-style:normal;font-size:8pt;letter-spacing:2px;background:#f59e0b;color:#111;border-radius:10px;padding:2px 8px;align-self:center;font-weight:700}
+.pd{flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.pd label,.pf2 label{display:block;font-size:7pt;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;font-weight:700;margin:6px 0 0}
+.pd h4{margin:0;line-height:1.15;color:#0b1f5c}.pd p{margin:0;font-size:10.5pt;font-weight:600}.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 .15in}
+.pf2{display:flex;justify-content:space-between;align-items:center;padding:.08in .22in;background:#eef3ff;border-top:2px solid #1e40af}.pf2 label{margin:0}.pf2 b{font-size:11pt}.ph2{font-weight:800;font-size:12pt;color:#0b1f5c}
+.pass.p .pn1 b{font-size:10pt}.pass.p .pn1 span{font-size:7.5pt}.pass.p .tg b{font-size:12pt}.pass.p .pm{flex-direction:column;align-items:stretch}.pass.p .bb{width:auto;flex-direction:row;gap:.15in;justify-content:center;align-items:center;padding:.1in}.pass.p .bb b{font-size:38pt;margin:0}.pass.p .pd h4{font-size:15pt!important}
+@media screen and (max-width:640px){.pass{zoom:.58}}
+@media print{.pgs{display:block;padding:0;overflow:visible}.pass{border:0;margin:0;zoom:1!important}.pass:last-child{break-after:auto;page-break-after:auto}}
 </style></head><body>
 <div class="top"><div class="in"><div class="lg"><i>K</i><div><b>KIPS College Sheikhupura (Boys)</b><span id="sub"></span></div></div>
 <nav id="nav"></nav></div></div>
 <main id="main"></main>
 <div id="login"><div class="mc"><h3>KIPS College Trip System – Staff Login</h3><label>Email<input id="le" type="email" autocomplete="username"></label><label>Password<input id="lp" type="password" autocomplete="current-password"></label><p id="lerr" style="color:#b91c1c;font-size:13px"></p><button class="btn pri" data-a="login">Sign in</button></div></div>
-<div id="modal"><div id="mb" style="width:100%"></div></div><div id="toast"></div>
+<div id="modal"><div id="mb" style="width:100%"></div></div><div id="toast"></div><style id="pgs"></style>
 <script>
 let D=[],D0=[],OUT=[];
 const M={payments:{},info:{},cfg:{}};const LK='kipsTripV2';let db=null,cloud=0,L=null,view='dash',cy=1,q='',flt='all',BC={};
@@ -78,16 +92,31 @@ function parseXl(wb){const out=[];wb.SheetNames.forEach(sn=>{const rows=XLSX.uti
  const iR=H.findIndex(c=>c.includes('roll')),iF=H.findIndex(c=>c.includes('father')),iN=H.findIndex(c=>c.includes('name')&&!c.includes('father'));
  const y=iF>=0?1:2,sec=sn.replace(/\s+/g,'').replace(/-/g,'').replace(/^([A-Za-z]+)(\d.*)$/,'$1-$2').toUpperCase();
  rows.slice(h+1).forEach(r=>{if(typeof r[0]!=='number')return;const ro=cl(r[iR]),n=cl(r[iN]);if(!ro||!n)return;let k=ro.replace(/[^A-Za-z0-9-]/g,'');if(seenK[k])k+='-'+sec.replace(/[^A-Za-z0-9]/g,'');seenK[k]=1;out.push({k,y,s:sec,r:ro,n,f:iF>=0?cl(r[iF]):''})})});return out}
-function passes(b){calcBC();const c=C(),I=c.bi[b]||{},l=D.filter(s=>info(s.k).bus==b).sort((x,y)=>(+info(x.k).seat||999)-(+info(y.k).seat||999)||x.s.localeCompare(y.s)||x.r.localeCompare(y.r,undefined,{numeric:true}));
+let PO='l',PL={list:[],title:''};try{PO=localStorage.getItem('kipsPO')||'l'}catch(_){}
+const pnf=s=>String(info(s.k).pn||'').padStart(4,'0');
+async function ensurePn(){let m=0;D.forEach(s=>{const n=+info(s.k).pn||0;if(n>m)m=n});
+ const l=D.filter(s=>info(s.k).bus&&!info(s.k).pn).sort((x,y)=>info(x.k).bus-info(y.k).bus||x.s.localeCompare(y.s)||x.r.localeCompare(y.r,undefined,{numeric:true}));
+ if(l.length)await Promise.all(l.map(s=>put('info',s.k,{...info(s.k),pn:++m},true)))}
+function showPasses(list,title){PL={list,title};const c=C(),w=PO=='l'?5.8:4.1,h=PO=='l'?4.1:5.8,fd=x=>new Date(x).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+ const ph=s=>{const i=info(s.k),b=i.bus,I=c.bi[b]||{},ht=i.hotel||I.hotel||'',o=s.y==3;
+  return `<div class="pass ${PO}"><div class="pt"><div class="lg2">K</div><div class="pn1"><b>KIPS COLLEGE SHEIKHUPURA</b><span>Sargodha Road · Boys Campus</span></div><div class="tg"><small>TRIP PASS</small><b>${pnf(s)}</b></div></div><div class="gold"></div>
+  <div class="pm"><div class="bb"><small>BUS</small><b>${b}</b><em>${o?'OUTSIDER':'STUDENT'}</em></div>
+  <div class="pd"><label>Student name</label><h4 style="font-size:${s.n.length>26?'13pt':'17pt'}">${esc(s.n)}</h4><div class="g2"><div><label>${o?'Reference':'Section / Roll #'}</label><p>${o?esc(s.ref):esc(s.s)+' / '+esc(s.r)}</p></div><div><label>Hotel</label><p>${esc(ht)||'—'}</p></div></div>
+  <label>Trip</label><p>${esc(c.trip)}${c.dest?' · '+esc(c.dest):''}${c.date?' · '+fd(c.date):''}</p></div></div>
+  <div class="pf2"><div><label>Bus Incharge</label><b>${esc(I.inc)||'—'}</b></div><div class="ph2">☎ ${esc(I.ph)||'—'}</div></div></div>`};
+ modal(`<div class="tools noprint" style="max-width:760px"><b>${esc(title)}</b><span class="k">${list.length} pass(es) · each ${w} × ${h} in</span><select data-c="po"><option value="l" ${PO=='l'?'selected':''}>Landscape 5.8 × 4.1 in</option><option value="p" ${PO=='p'?'selected':''}>Portrait 4.1 × 5.8 in</option></select><button class="btn pri" data-a="print">Print / Save PDF</button><button class="btn" data-a="x">Close</button><span class="k" style="width:100%">In the print window choose <b>Save as PDF</b> (page size is set automatically), Margins: None, Scale: 100%.</span></div><div class="pgs">${list.map(ph).join('')}</div>`);
+ $('pgs').textContent=`@page{size:${w}in ${h}in;margin:0}`}
+function passes(b){const c=C(),I=c.bi[b]||{},l=D.filter(s=>info(s.k).bus==b).sort((x,y)=>(x.y==3)-(y.y==3)||x.s.localeCompare(y.s)||x.r.localeCompare(y.r,undefined,{numeric:true}));
  if(!l.length)return toast('No students in Bus '+b);
- const miss=l.filter(s=>{const i=info(s.k);return !i.seat||!(i.hotel||I.hotel)||!i.room}).length,im=!(I.inc&&I.ph);
- if((miss||im)&&!confirm((miss?miss+' student(s) have seat / hotel / room missing. ':'')+(im?'Bus incharge name or phone is missing. ':'')+'Print passes anyway?'))return;
- const ps=s=>{const i=info(s.k),ht=i.hotel||I.hotel||'';return `<div class="ps"><div class="ph"><b>KIPS COLLEGE SHEIKHUPURA</b><span>Sargodha Road · Boys Campus</span><em>${esc(c.trip)}${c.dest?' – '+esc(c.dest):''}</em></div><div class="pb"><small>BUS</small><b>${b}</b></div>
- <dl><dt>Student</dt><dd>${esc(s.n)}</dd><dt>${s.y==3?'Reference':'Section / Roll #'}</dt><dd>${s.y==3?esc(s.ref):esc(s.s)+' / '+esc(s.r)}</dd><dt>Hotel</dt><dd>${esc(ht)||'—'}</dd></dl>
- <div class="pr"><span>Seat<b>${i.seat||'—'}</b></span><span>Floor<b>${esc(i.floor)||'—'}</b></span><span>Room<b>${esc(i.room)||'—'}</b></span></div>
- <div class="pf">Bus Incharge: <b>${esc(I.inc)||'—'}</b> · ${esc(I.ph)||'—'}</div></div>`};
- let pg='';for(let i=0;i<l.length;i+=6){const ch=l.slice(i,i+6);pg+=`<div class="pg">${ch.map(ps).join('')}${'<div></div>'.repeat(6-ch.length)}</div>`}
- modal(`<div class="tools noprint" style="max-width:700px"><b>Bus ${b} – ${l.length} passes · ${Math.ceil(l.length/6)} A4 page(s)</b><button class="btn pri" data-a="print">Print / Save PDF</button><button class="btn" data-a="x">Close</button><span class="k" style="width:100%">Tip: in the print window choose paper size A4, margins Default, and turn Headers and footers off.</span></div><div class="pgs">${pg}</div>`)}
+ const miss=l.filter(s=>!(info(s.k).hotel||I.hotel)).length,im=!(I.inc&&I.ph);
+ if((miss||im)&&!confirm((miss?miss+' student(s) have no hotel name. ':'')+(im?'Bus incharge name or phone is missing. ':'')+'Print anyway?'))return;
+ showPasses(l,'Bus '+b+' – all passes')}
+function psFind(v){v=v.trim().toLowerCase();if(!v)return[];const ex=/^\d+$/.test(v)?D.filter(s=>info(s.k).bus&&+info(s.k).pn==+v):[];return ex.concat(D.filter(s=>info(s.k).bus&&!ex.includes(s)&&(s.n+' '+s.r).toLowerCase().includes(v))).slice(0,8)}
+function psr(){const v=$('psq').value,l=psFind(v);$('psr').innerHTML=l.map(s=>`<div class="bl"><span><b>${pnf(s)}</b> · ${esc(s.n)} <small>Bus ${info(s.k).bus} · ${s.y==3?'Outsider':s.s+' / '+esc(s.r)}</small></span><button class="btn sm pri" data-a="ps1" data-k="${s.k}">Print pass</button></div>`).join('')||(v.trim()?'<div class="k">No pass found for this search.</div>':'')}
+async function psgo(){const v=$('psq').value.trim(),l=psFind(v);if(!l.length)return toast('No pass found');if(l.length>1&&!(/^\d+$/.test(v)&&+info(l[0].k).pn==+v))return toast('Several students match – choose one from the list');await ensurePn();showPasses([l[0]],'Pass '+pnf(l[0]))}
+function tileModal(k){const s=S(k),o=info(k);modal(`<div class="mc" style="margin:auto"><h3>${esc(s.n)}</h3><div class="k">${s.y==3?'Outsider · Ref: '+esc(s.ref):s.s+' · '+esc(s.r)} · Bus ${o.bus}${o.pn?' · Pass '+pnf(s):''}</div>
+ <label>Seat #<input id="ts" type="number" min="1" value="${esc(o.seat||'')}"></label><label>Floor #<input id="tf" value="${esc(o.floor||'')}"></label><label>Room #<input id="tr" value="${esc(o.room||'')}"></label><label>Hotel (leave empty to use the bus hotel)<input id="th" value="${esc(o.hotel||'')}"></label>
+ <div class="row" style="margin-top:12px"><button class="btn pri" data-a="tok" data-k="${k}">Save</button><button class="btn" data-a="x">Cancel</button></div></div>`)}
 function outModal(k){const o=k?S(k):{};modal(`<div class="mc" style="margin:auto"><h3>${k?'Edit':'Add'} outsider student</h3>
 <label>Student name *<input id="on" value="${esc(o.n||'')}"></label><label>Father name *<input id="of" value="${esc(o.f||'')}"></label><label>Contact / WhatsApp no. *<input id="op" type="tel" value="${esc(k?info(k).ph||o.ph||'':'')}" placeholder="03xx xxxxxxx"></label><label>Reference (who referred) *<input id="orf" value="${esc(o.ref||'')}"></label>
 <div class="row" style="margin-top:12px"><button class="btn pri" data-a="outok" data-k="${k||''}">Save</button>${k?'':'<button class="btn pay" data-a="outok" data-k="" data-pay="1">Save &amp; take payment</button>'}<button class="btn" data-a="x">Cancel</button></div></div>`)}
@@ -133,10 +162,9 @@ function buses(){const c=C(),used=Object.values(BC).reduce((x,y)=>x+y,0),un=D.fi
  for(let b=1;b<=c.buses;b++){const I=c.bi[b]||{},l=D.filter(s=>info(s.k).bus==b).sort((x,y)=>(+info(x.k).seat||999)-(+info(y.k).seat||999)||x.s.localeCompare(y.s)||x.r.localeCompare(y.r,undefined,{numeric:true})),n=l.length,inp=(f,ph,v)=>`<input data-c="bi" data-b="${b}" data-f="${f}" placeholder="${ph}" value="${esc(v||'')}">`;
   h+=`<div class="card"><div class="row"><b>Bus ${b}</b><span class="pill ${n>=c.cap?'no':'ok'}">${n}/${c.cap}${n>=c.cap?' · Full':''}</span></div><div class="seats">${Array.from({length:c.cap},(_,i)=>`<i class="${i<n?'f':''}"></i>`).join('')}</div>
   <div class="bf">${inp('inc','Bus incharge name',I.inc)}${inp('ph','Incharge phone',I.ph)}${inp('hotel','Hotel name (for this bus)',I.hotel)}</div>
-  <div class="row" style="margin:8px 0"><button class="btn sm" data-a="autoseat" data-b="${b}">Auto seat numbers</button><button class="btn sm pri" data-a="passes" data-b="${b}">🖨 Print passes (A4)</button></div>
-  <div class="bx">${l.map((s,i)=>{const o=info(s.k),f=(k,ph,w)=>`<input class="mi" style="width:${w}px" data-c="bf" data-k="${s.k}" data-f="${k}" placeholder="${ph}" value="${esc(o[k]||'')}">`;
-   return `<div class="rw"><div class="bl" style="border:0"><span>${i+1}. <b>${esc(s.n)}</b> <small>${s.y==3?'Outsider · Ref: '+esc(s.ref):s.s+' · '+esc(s.r)}</small></span><button class="btn sm" data-a="busrm" data-k="${s.k}">✕</button></div><div class="bf2">${f('seat','Seat',58)}${f('floor','Floor',58)}${f('room','Room',64)}${f('hotel','Hotel (optional)',130)}</div></div>`}).join('')||'<div class="k">No students assigned.</div>'}</div></div>`}
- return h+`</div>`}
+  <div class="row" style="margin:8px 0"><button class="btn sm" data-a="autoseat" data-b="${b}">Auto seat numbers</button><button class="btn sm pri" data-a="passes" data-b="${b}">🖨 Print all passes (PDF)</button></div>
+  <div class="tls">${l.map(s=>{const o=info(s.k);return `<div class="tl" data-a="tile" data-k="${s.k}" title="${esc(s.n)} – click to edit seat / room / hotel"><button class="tx" data-a="busrm" data-k="${s.k}" title="Remove from bus">✕</button><b>${esc(s.n)}</b><small>${s.y==3?'Outsider':s.s+' · '+esc(s.r)}</small>${o.seat||o.room?`<i>${o.seat?'Seat '+o.seat:''}${o.seat&&o.room?' · ':''}${o.room?'Room '+esc(o.room):''}</i>`:''}</div>`}).join('')||'<div class="k">No students assigned.</div>'}</div></div>`}
+ return h+`</div><div class="card"><b style="font-size:17px">Find &amp; print a single pass</b><div class="k" style="margin-bottom:8px">Type the pass number (e.g. 0012), or a student name / roll number.</div><div class="row" style="justify-content:flex-start"><input id="psq" placeholder="Pass number / name / roll no" style="min-width:260px"><button class="btn pri" data-a="psgo">Print pass</button></div><div id="psr" style="margin-top:8px"></div></div>`}
 function sett(){const c=C();return `<div class="card" style="max-width:520px"><b style="font-size:17px">Trip settings</b><label>Trip name<input id="s1" value="${esc(c.trip)}"></label><label>Destination<input id="s2" value="${esc(c.dest)}"></label><label>Trip date<input id="s3" type="date" value="${esc(c.date)}"></label><label>Fee per student (Rs)<input id="s4" type="number" min="1" value="${c.fee}"></label><label>Seats per bus<input id="s5" type="number" min="1" value="${c.cap}"></label><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="s6" style="width:auto;margin:0" ${c.busPartial?'checked':''}> Also allow partial-payment students in the bus list</label><button class="btn pri" data-a="savecfg">Save settings</button><p class="k">Class incharge names are entered inside each section (Sections tab).</p></div><div class="card" style="max-width:520px"><b style="font-size:17px">Data &amp; backup</b><p class="k">${cloud==1?'Your data is stored in the cloud database and is the same on every phone that opens this link.':'Cloud database is not connected – data is only on this device.'}</p><button class="btn" data-a="bk">Download backup (JSON)</button><label>Restore from backup<input type="file" accept=".json" data-c="rf"></label><label>Import student list – choose both Excel files (1st year + 2nd year) together<input type="file" accept=".xlsx,.json" multiple data-c="imp"></label></div>`}
 function render(){const a=document.activeElement;if(a&&a.id!='q'&&a.closest&&a.closest('#main')&&/^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)&&!document.hidden){clearTimeout(render.t);render.t=setTimeout(render,500);return}render0()}
 function render0(){const c=C();BC={};D.forEach(s=>{const b=info(s.k).bus;if(b)BC[b]=(BC[b]||0)+1});
@@ -145,7 +173,7 @@ function render0(){const c=C();BC={};D.forEach(s=>{const b=info(s.k).bus;if(b)BC
  const f=document.activeElement&&document.activeElement.id=='q';
  $('main').innerHTML=banner()+{dash,sec:secs,bus:buses,set:sett}[view]();
  if(f){const e=$('q');e.focus();e.setSelectionRange(e.value.length,e.value.length)}}
-const modal=h=>{$('mb').innerHTML=h;$('modal').style.display='flex'},close=()=>$('modal').style.display='none';
+const modal=h=>{$('mb').innerHTML=h;$('modal').style.display='flex'},close=()=>{$('modal').style.display='none';$('pgs').textContent=''};
 function payModal(k){const s=S(k),f=C().fee,b=f-paid(k);
  modal(`<div class="mc" style="margin:auto"><h3>Record payment</h3><b>${esc(s.n)}</b><div class="k">${esc(s.r)} · ${cls2(s)}</div><p class="k">Fee ${rs(f)} · Paid ${rs(paid(k))} · Balance ${rs(b)}</p>
  <label>Amount received (Rs) – partial payment allowed<input id="pa" type="number" min="1" max="${b}" value="${b}"></label><label>Method<select id="pm"><option>Cash</option><option>Bank Transfer</option><option>Easypaisa</option><option>JazzCash</option></select></label>
@@ -160,7 +188,7 @@ function showRc(k,i){const s=S(k),ps=pays(k),p=ps[i];if(!p)return;const c=C(),pd
  <div class="tools noprint">${ps.length>1?ps.map((q,j)=>`<button class="chip ${j==i?'on':''}" data-a="rc" data-k="${k}" data-i="${j}">#${j+1} ${rs(q.a)}</button>`).join(''):''}
  <input id="wph" value="${esc(info(k).ph||'')}" placeholder="WhatsApp no. 03xx xxxxxxx"><button class="btn wa" data-a="wa" data-k="${k}" data-i="${i}">Send on WhatsApp</button><button class="btn pri" data-a="print">Print / PDF</button><button class="btn" data-a="x">Close</button><button class="btn" data-a="undo" data-k="${k}" data-i="${i}">Cancel this payment</button></div>`)}
 document.addEventListener('click',async e=>{const t=e.target.closest('[data-a]');if(!t)return;const d=t.dataset,a=d.a,c=C();
- if(a=='v'){view=d.v;render();scrollTo(0,0)}
+ if(a=='v'){view=d.v;if(d.v=='bus')ensurePn();render();scrollTo(0,0)}
  else if(a=='sec'){cy=+d.y;cs=d.s;view='sec';q='';flt='all';render();scrollTo(0,0)}
  else if(a=='pay')payModal(d.k);
  else if(a=='payok'){const amt=Math.round(+$('pa').value),b=c.fee-paid(d.k);if(!(amt>0&&amt<=b))return toast('Enter an amount between 1 and '+b);
@@ -172,11 +200,15 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-a]')
  else if(a=='wa'){const ph=$('wph').value,n=normPh(ph);if(!n)return toast('Enter a valid WhatsApp number (e.g. 0300 1234567)');
   if(ph!=info(d.k).ph)put('info',d.k,{...info(d.k),ph});window.open('https://wa.me/'+n+'?text='+encodeURIComponent(waMsg(d.k,+d.i)),'_blank')}
  else if(a=='addbus')setCfg({buses:c.buses+1});else if(a=='rmbus')setCfg({buses:c.buses-1});
- else if(a=='busrm')put('info',d.k,{...info(d.k),bus:0,seat:''});
- else if(a=='busadd'){const s=D.find(x=>x.r+' · '+x.n==$('bq').value&&elig(x));if(!s)return toast('Choose a paid student from the list');calcBC();const b=+$('bs').value;if((BC[b]||0)>=c.cap)return toast('Bus '+b+' is full');put('info',s.k,{...info(s.k),bus:b,seat:''})}
+ else if(a=='busrm'){if(confirm('Remove this student from the bus?'))put('info',d.k,{...info(d.k),bus:0,seat:''})}
+ else if(a=='busadd'){const s=D.find(x=>x.r+' · '+x.n==$('bq').value&&elig(x));if(!s)return toast('Choose a paid student from the list');calcBC();const b=+$('bs').value;if((BC[b]||0)>=c.cap)return toast('Bus '+b+' is full');(put('info',s.k,{...info(s.k),bus:b,seat:''}),ensurePn())}
  else if(a=='savecfg'){await setCfg({trip:$('s1').value.trim()||'Educational Trip',dest:$('s2').value.trim(),date:$('s3').value,fee:Math.max(1,+$('s4').value||16000),cap:Math.max(1,+$('s5').value||25),busPartial:$('s6').checked});toast('Settings saved')}
  else if(a=='out')auth.signOut();
- else if(a=='passes')passes(d.b);
+ else if(a=='passes'){await ensurePn();passes(d.b)}
+ else if(a=='ps1'){await ensurePn();showPasses([S(d.k)],'Pass '+pnf(S(d.k)))}
+ else if(a=='psgo')psgo();else if(a=='tile')tileModal(d.k);
+ else if(a=='tok'){const k=d.k,n=$('ts').value.trim(),b=info(k).bus;let v='';if(n){v=Math.round(+n);if(!(v>=1&&v<=c.cap))return toast('Seat must be between 1 and '+c.cap);if(D.some(x=>x.k!=k&&info(x.k).bus==b&&+info(x.k).seat==v))return toast('Seat '+v+' is already taken in this bus')}
+  close();put('info',k,{...info(k),seat:v,floor:$('tf').value.trim(),room:$('tr').value.trim(),hotel:$('th').value.trim()})}
  else if(a=='autoseat'){calcBC();const l=D.filter(s=>info(s.k).bus==+d.b).sort((x,y)=>x.s.localeCompare(y.s)||x.r.localeCompare(y.r,undefined,{numeric:true})),u=new Set(l.map(s=>+info(s.k).seat).filter(Boolean));let n=1;for(const s of l){if(info(s.k).seat)continue;while(u.has(n))n++;u.add(n);await put('info',s.k,{...info(s.k),seat:n},true)}render();toast('Seat numbers assigned')}
  else if(a=='addout')outModal('');else if(a=='editout')outModal(d.k);
  else if(a=='outok'){const n=$('on').value.trim(),f=$('of').value.trim(),ph=$('op').value.trim(),ref=$('orf').value.trim();if(!n||!f||!ph||!ref)return toast('Please fill all four fields');if(!normPh(ph))return toast('Enter a valid contact number (e.g. 0300 1234567)');
@@ -191,23 +223,24 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-a]')
   D.forEach(s=>r.push([yn(s.y),s.s,c.inc[s.y+'|'+s.s]||'',s.r,s.n,s.f,info(s.k).ph||'',info(s.k).bus||'',paid(s.k),Math.max(0,c.fee-paid(s.k)),st(s.k),s.ref||'',info(s.k).seat||'',info(s.k).hotel||(c.bi[info(s.k).bus]||{}).hotel||'',info(s.k).floor||'',info(s.k).room||'']));
   const csv='\ufeff'+r.map(x=>x.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
   saveFile('trip_report.csv',csv)}});
-document.addEventListener('input',e=>{if(e.target.id=='q'){q=e.target.value;render()}});
+document.addEventListener('input',e=>{if(e.target.id=='q'){q=e.target.value;render()}else if(e.target.id=='psq')psr()});
 document.addEventListener('change',e=>{const t=e.target,d=t.dataset;if(!d.c)return;
  if(d.c=='imp'){const fs=[...t.files];if(!fs.length)return;(async()=>{try{seenK={};const a=[];for(const f of fs){if(/\.json$/i.test(f.name))a.push(...JSON.parse(await f.text()));else a.push(...parseXl(XLSX.read(await f.arrayBuffer(),{type:'array'})))}
  if(!a.length)throw 0;const g={},ord=[];a.forEach(s=>{const id=s.y+'_'+s.s;if(!g[id]){g[id]={y:s.y,s:s.s,o:ord.length,list:[]};ord.push(id)}g[id].list.push({k:s.k,r:s.r,n:s.n,f:s.f})});
  for(const id of ord)await db.doc('students/'+id).set(g[id]);toast('Student list imported ('+a.length+' students, '+ord.length+' sections)')}catch(_){toast('Import failed – check the files and your login')}})()}
  else if(d.c=='rf'){const f=t.files[0];if(!f)return;f.text().then(async tx=>{try{const j=JSON.parse(tx);for(const col of ['payments','info','cfg'])for(const [id,v] of Object.entries(j[col]||{}))await put(col,id,v,true);for(const o of j.outsiders||[])await db.doc('outsiders/'+o.id).set({n:o.n,f:o.f,ref:o.ref,ph:o.ph,no:o.no,at:new Date().toISOString()});render();toast('Backup restored')}catch(_){toast('Invalid backup file')}})}
+ else if(d.c=='po'){PO=t.value;try{localStorage.setItem('kipsPO',PO)}catch(_){}showPasses(PL.list,PL.title)}
  else if(d.c=='bi')setCfg({bi:{...C().bi,[d.b]:{...(C().bi[d.b]||{}),[d.f]:t.value.trim()}}},true);
  else if(d.c=='bf'){let v=t.value.trim();if(d.f=='seat'&&v){const n=Math.round(+v),b=info(d.k).bus;if(!(n>=1&&n<=C().cap)){toast('Seat must be between 1 and '+C().cap);t.value=info(d.k).seat||'';return}if(D.some(x=>x.k!=d.k&&info(x.k).bus==b&&+info(x.k).seat==n)){toast('Seat '+n+' is already taken in this bus');t.value=info(d.k).seat||'';return}v=n}put('info',d.k,{...info(d.k),[d.f]:v},true)}
  else if(d.c=='flt'){flt=t.value;render()}
  else if(d.c=='inc')setCfg({inc:{...C().inc,[cy+'|'+cs]:t.value.trim()}});
  else if(d.c=='ph')put('info',d.k,{...info(d.k),ph:t.value.trim()});
- else if(d.c=='bus'){calcBC();const b=+t.value;t.blur();if(b&&(BC[b]||0)>=C().cap&&info(d.k).bus!=b){toast('Bus '+b+' is full');return render()}put('info',d.k,{...info(d.k),bus:b,seat:''})}});
+ else if(d.c=='bus'){calcBC();const b=+t.value;t.blur();if(b&&(BC[b]||0)>=C().cap&&info(d.k).bus!=b){toast('Bus '+b+' is full');return render()}(put('info',d.k,{...info(d.k),bus:b,seat:''}),b&&ensurePn())}});
 
 render();
 const FB={apiKey:"AIzaSyAe3ncRu7e8Zm8XzYoD72YzesU8sFI06vY",authDomain:"kips-trip2026.firebaseapp.com",projectId:"kips-trip2026",storageBucket:"kips-trip2026.firebasestorage.app",messagingSenderId:"1062070382345",appId:"1:1062070382345:web:249f3ac258052dd5a86dd8"};
 let unsub=[];const auth=(()=>{try{firebase.initializeApp(FB);return firebase.auth()}catch(e){return null}})();
-document.addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.id=='lp')document.querySelector('[data-a=login]').click()});
+document.addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.id=='lp')document.querySelector('[data-a=login]').click();if(e.key=='Enter'&&e.target.id=='psq')psgo()});
 if(!auth||FB.apiKey.startsWith('PASTE'))$('lerr').textContent='Firebase settings are not filled in this file yet (see setup steps).';
 else auth.onAuthStateChanged(u=>{unsub.forEach(f=>f());unsub=[];
  if(!u){db=null;cloud=0;D=[];D0=[];OUT=[];Object.keys(M).forEach(c=>M[c]={});$('login').style.display='flex';return render()}
