@@ -190,6 +190,15 @@ th{position:sticky;top:0;background:#f3f7ff;z-index:1}tr:hover td{background:#f6
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}@media(max-width:480px){.g3{grid-template-columns:1fr}}
 .fb input,.fb select{width:100%}
 @media(max-width:700px){.ptool .btn{flex:1;padding:10px 8px;font-size:13px}.tls.big{grid-template-columns:1fr 1fr}}
+</style>
+<style>
+.pop{display:flex;flex-direction:column;max-height:calc(100vh - 36px);max-height:calc(100dvh - 36px)}.ph3{flex:none}.pbody{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.tls.big{max-height:none;overflow:visible}
+.btn.danger{background:#fff;color:#b91c1c;border-color:#fecaca}.btn.danger:hover{background:#fee2e2}
+.fh .av.xl{width:46px;height:46px;font-size:16px;background:linear-gradient(135deg,#38bdf8,#1d4ed8);border-radius:14px}
+.tl[data-a]{cursor:pointer}.tl[data-a]:hover{border-color:#1d4ed8;background:#f3f8ff}
+@media(max-width:860px){.pgrid .pcol:first-child{order:2}.pgrid .pcol:last-child{order:1}}
+@media(hover:none){.tx{opacity:1!important}}
 </style></head><body>
 <div class="top"><div class="in"><div class="lg"><img data-logo alt="KIPS"><div><b>KIPS College Sheikhupura (Boys)</b><span id="sub"></span></div></div>
 <div class="act" id="act"></div></div></div><nav id="nav"></nav>
@@ -257,9 +266,16 @@ async function previewOut(files){const tabs=await readTab(files),list=[],dup=[],
 function psFind(v){v=v.trim().toLowerCase();if(!v)return[];const ex=/^\d+$/.test(v)?D.filter(s=>info(s.k).bus&&+info(s.k).pn==+v):[];return ex.concat(D.filter(s=>info(s.k).bus&&!ex.includes(s)&&(s.n+' '+s.r).toLowerCase().includes(v))).slice(0,8)}
 function psr(){const v=$('psq').value,l=psFind(v);$('psr').innerHTML=l.map(s=>`<div class="bl"><span><b>${pnf(s)}</b> · ${esc(s.n)} <small>Bus ${info(s.k).bus} · ${s.y==3?'Outsider':s.s+' / '+esc(s.r)}</small></span><button class="btn sm pri" data-a="ps1" data-k="${s.k}">Print pass</button></div>`).join('')||(v.trim()?'<div class="k">No pass found for this search.</div>':'')}
 async function psgo(){const v=$('psq').value.trim(),l=psFind(v);if(!l.length)return toast('No pass found');if(l.length>1&&!(/^\d+$/.test(v)&&+info(l[0].k).pn==+v))return toast('Several students match – choose one from the list');await ensurePn();showPasses([l[0]],'Pass '+pnf(l[0]))}
-function tileModal(k){const s=S(k),o=info(k);modal(`<div class="mc" style="margin:auto"><h3>${esc(s.n)}</h3><div class="k">${s.y==3?'Outsider · Ref: '+esc(s.ref):s.s+' · '+esc(s.r)} · Bus ${o.bus}${o.pn?' · Pass '+pnf(s):''}</div>
- <label>Seat # (1 – ${capOf(o.bus)})<input id="ts" type="number" min="1" max="${capOf(o.bus)}" value="${esc(o.seat||'')}"></label>
- <div class="row" style="margin-top:12px"><button class="btn pri" data-a="tok" data-k="${k}">Save</button><button class="btn" data-a="bpback" data-b="${o.bus}">Back</button></div></div>`)}
+function tileModal(k){POP=null;calcBC();const s=S(k),o=info(k),b=o.bus,c=C(),opts=Array.from({length:c.buses},(_,i)=>i+1).filter(x=>x!=b).map(x=>{const n=BC[x]||0,full=n>=capOf(x);return `<option value="${x}" ${full?'disabled':''}>Bus ${x} (${n}/${capOf(x)})${full?' – full':''}</option>`}).join('');
+ modal(`<div class="mc form"><div class="fh"><i class="av xl">${ini(s.n)}</i><div><b>${esc(s.n)}</b><span>${s.y==3?'Outsider':s.s+' · '+esc(s.r)} · Bus ${b}${o.pn?' · Pass '+pnf(s):''}</span></div><button class="pcx" data-a="bpback" data-b="${b}" title="Close">✕</button></div><div class="fb">
+ <label class="fl">Seat # (1 – ${capOf(b)})<input id="ts" type="number" min="1" max="${capOf(b)}" value="${esc(o.seat||'')}"></label>
+ <label class="fl">Move to another bus<select id="tmv"><option value="">— keep in Bus ${b} —</option>${opts}</select></label>
+ <div class="row" style="margin-top:14px"><button class="btn pri" data-a="tok" data-k="${k}">Save</button><button class="btn" data-a="bpback" data-b="${b}">Back</button><button class="btn danger" data-a="busrm2" data-k="${k}" style="margin-left:auto">Remove from bus</button></div></div></div>`)}
+function roomMoveModal(k){POP=null;const s=S(k),o=info(k),H=C().hotels||[],hr=H.find(h=>h.id==o.hid),rr=hr&&(hr.rooms||[]).find(r=>r.id==o.rid),
+ opts=H.flatMap(h=>(h.rooms||[]).filter(r=>r.id!=o.rid).map(r=>{const n=rcount(r.id),full=n>=r.cap;return `<option value="${h.id}|${r.id}" ${full?'disabled':''}>${esc(h.name)} – Room ${esc(r.no)} (${n}/${r.cap})${full?' – full':''}</option>`})).join('');
+ modal(`<div class="mc form"><div class="fh"><i class="av xl">${ini(s.n)}</i><div><b>${esc(s.n)}</b><span>${hr?esc(hr.name):''}${rr?' · Room '+esc(rr.no):''}</span></div><button class="pcx" data-a="rback" data-h="${o.hid}" data-r="${o.rid}" title="Close">✕</button></div><div class="fb">
+ <label class="fl">Move to another room<select id="rmv"><option value="">— keep in this room —</option>${opts}</select></label>
+ <div class="row" style="margin-top:14px"><button class="btn pri" data-a="rmok" data-k="${k}" data-h="${o.hid}" data-r="${o.rid}">Move</button><button class="btn" data-a="rback" data-h="${o.hid}" data-r="${o.rid}">Back</button><button class="btn danger" data-a="rrm" data-k="${k}" data-h="${o.hid}" data-r="${o.rid}" style="margin-left:auto">Remove from room</button></div></div></div>`)}
 function outModal(k){const o=k?S(k):{};modal(`<div class="mc" style="margin:auto"><h3>${k?'Edit':'Add'} outsider student</h3>
 <label>Student name<input id="on" value="${esc(o.n||'')}"></label><label>Father name<input id="of" value="${esc(o.f||'')}"></label><label>Contact / WhatsApp no.<input id="op" type="tel" value="${esc(k?info(k).ph||o.ph||'':'')}" placeholder="03xx xxxxxxx"></label><label>Reference (who referred)<input id="orf" value="${esc(o.ref||'')}"></label><label>Section of the reference (optional)<input id="osec" value="${esc(o.sec||'')}"></label><label>Trip fee (empty = Rs ${C().fee})<input id="ofee" type="number" min="0" value="${k?info(k).fee||'':''}"></label>
 <div class="row" style="margin-top:12px"><button class="btn pri" data-a="outok" data-k="${k||''}">Save</button>${k?'':'<button class="btn pay" data-a="outok" data-k="" data-pay="1">Save &amp; take payment</button>'}<button class="btn" data-a="x">Cancel</button></div></div>`)}
@@ -314,7 +330,7 @@ function busPop(b,f){POP={t:'bus',b};calcBC();const c=C(),I=c.bi[b]||{},cap=capO
   </div>
   <div class="pcol"><div class="srch"><input id="bps" placeholder="🔍 Search a paid student (name / roll no) and press Add…" autocomplete="off"><div id="bpr" class="sug"></div></div>
   <div class="tls big">${l.map(s=>tileH(s,'tile','busrm',info(s.k).seat?`<i>Seat ${info(s.k).seat}</i>`:'')).join('')||'<div class="k" style="padding:14px">No students yet – search above to add the first one.</div>'}</div></div></div>`,`<div class="bbadge">${b}</div>`));
- if(f)setTimeout(()=>{const e=$('bps');e&&e.focus()},40)}
+ if(f)setTimeout(()=>{const e=$('bps');e&&innerWidth>700&&e.focus({preventScroll:true})},40)}
 function busSug(){const v=$('bps').value.trim().toLowerCase(),l=v?D.filter(s=>!info(s.k).bus&&elig(s)&&(s.n+' '+s.r+' '+(s.ref||'')).toLowerCase().includes(v)).slice(0,8):[];
  $('bpr').innerHTML=sugH(l,'bpadd','data-b="'+POP.b+'"')||(v?'<div class="k" style="padding:10px">No match – the student may already be in a bus, or not fully paid.</div>':'')}
 function hotelPop(hid){POP={t:'hotel',h:hid};const H=(C().hotels||[]).find(x=>x.id==hid);if(!H)return close();const rr=H.rooms||[],occ=rr.reduce((a,r)=>a+rcount(r.id),0),bd=rr.reduce((a,r)=>a+(+r.cap||0),0);
@@ -323,8 +339,8 @@ function hotelPop(hid){POP={t:'hotel',h:hid};const H=(C().hotels||[]).find(x=>x.
 function roomPop(hid,rid,f){POP={t:'room',h:hid,r:rid};const H=(C().hotels||[]).find(x=>x.id==hid),R=H&&(H.rooms||[]).find(x=>x.id==rid);if(!R)return close();const l=D.filter(s=>info(s.k).rid==rid);
  modal(pshell('Room '+esc(R.no),esc(H.name)+' · '+l.length+'/'+R.cap+' beds',`<div class="row" style="margin-bottom:14px"><button class="btn" data-a="hpback" data-h="${hid}">← All rooms</button><span class="row" style="gap:8px"><label class="fl inl">Room no.<input class="mi" style="width:90px" data-c="rno" data-h="${hid}" data-r="${rid}" value="${esc(R.no)}"></label><label class="fl inl">Beds<select data-c="rcap" data-h="${hid}" data-r="${rid}">${[1,2,3,4,5,6,8,10].map(x=>`<option ${x==R.cap?'selected':''} value="${x}">${x}</option>`).join('')}</select></label><button class="btn" data-a="delroom" data-h="${hid}" data-r="${rid}">Delete room</button></span></div>
  <div class="srch"><input id="hps" placeholder="🔍 Search a student and press Add…" autocomplete="off"><div id="hpr" class="sug"></div></div>
- <div class="tls big" style="margin-top:14px">${l.map(s=>tileH(s,'','hrm')).join('')||'<div class="k" style="padding:14px">Empty room – search above to add students.</div>'}</div>`,'<div class="bbadge">🛏️</div>'));
- if(f)setTimeout(()=>{const e=$('hps');e&&e.focus()},40)}
+ <div class="tls big" style="margin-top:14px">${l.map(s=>tileH(s,'rtile','hrm')).join('')||'<div class="k" style="padding:14px">Empty room – search above to add students.</div>'}</div>`,'<div class="bbadge">🛏️</div>'));
+ if(f)setTimeout(()=>{const e=$('hps');e&&innerWidth>700&&e.focus({preventScroll:true})},40)}
 function roomSug(){const v=$('hps').value.trim().toLowerCase(),l=v?D.filter(s=>!info(s.k).rid&&elig(s)&&(s.n+' '+s.r+' '+(s.ref||'')).toLowerCase().includes(v)).slice(0,8):[];
  $('hpr').innerHTML=sugH(l,'hpadd','data-h="'+POP.h+'" data-r="'+POP.r+'"')||(v?'<div class="k" style="padding:10px">No match – the student may already have a room, or is not fully paid.</div>':'')}
 function profPop(k){const s=S(k),o=info(k),p=paid(k),f=feeOf(k),ps=pays(k),ht=hotelOf(k),rm=roomOf(k),ph=normPh(o.ph||'');
@@ -448,7 +464,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-a]')
  else if(a=='passes'){await ensurePn();passes(d.b)}
  else if(a=='ps1'){await ensurePn();showPasses([S(d.k)],'Pass '+pnf(S(d.k)))}
  else if(a=='psgo')psgo();else if(a=='tile')tileModal(d.k);
- else if(a=='tok'){const k=d.k,n=$('ts').value.trim(),b=info(k).bus;let v='';if(n){v=Math.round(+n);if(!(v>=1&&v<=capOf(b)))return toast('Seat must be between 1 and '+capOf(b));if(D.some(x=>x.k!=k&&info(x.k).bus==b&&+info(x.k).seat==v))return toast('Seat '+v+' is already taken in this bus')}setInfo(k,{seat:v||null},true);busPop(b)}
+ else if(a=='tok'){const k=d.k,n=$('ts').value.trim(),b=info(k).bus;let v='';if(n){v=Math.round(+n);if(!(v>=1&&v<=capOf(b)))return toast('Seat must be between 1 and '+capOf(b));if(D.some(x=>x.k!=k&&info(x.k).bus==b&&+info(x.k).seat==v))return toast('Seat '+v+' is already taken in this bus')}const mv=+$('tmv').value;if(mv){calcBC();if((BC[mv]||0)>=capOf(mv))return toast('Bus '+mv+' is full');await setInfo(k,{bus:mv,seat:null},true);ensurePn();toast(S(k).n+' moved to Bus '+mv);render();return busPop(b)}await setInfo(k,{seat:v||null},true);busPop(b)}
  else if(a=='list')showList(d.b);
  else if(a=='addstu')stuModal('',cy,cs);else if(a=='editstu')stuModal(d.k);
  else if(a=='stuok'){const n=$('en').value.trim(),r=$('er').value.trim();if(!n||!r)return toast('Name and roll no are required');const fx=$('ef').value.trim(),dup=D.find(x=>x.k!=d.k&&(nz(x.r)==nz(r)||(x.y!=3&&fx&&nz(x.n)==nz(n)&&nz(x.f)==nz(fx))));if(dup)return toast('Already in the list: '+dup.n+' ('+(dup.y==3?'Outsider':dup.s)+' · '+dup.r+')');const[y,s]=$('es').value.split('|'),old=d.k?S(d.k):null,ph=$('ep').value.trim(),ph2=$('ep2').value.trim();
@@ -458,10 +474,14 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-a]')
  else if(a=='editpay')editPay(d.k,+d.i);
  else if(a=='editpayok'){const k=d.k,i=+d.i,amt=Math.round(+$('xa').value);if(!(amt>0))return toast('Enter a valid amount');const ps=pays(k).map((p,j)=>j!=i?p:{...p,a:amt,m:$('xm').value.trim()||p.m,rn:$('xr').value.trim(),at:$('xd').value?new Date($('xd').value+'T12:00:00').toISOString():p.at});close();await put('payments',k,{pays:ps});showRc(k,i)}
  else if(a=='masterapply')applyMaster();
- else if(a=='bus')busPop(+d.b,true);else if(a=='bpback')busPop(+d.b);
+ else if(a=='bus'){busPop(+d.b,true);const pb=document.querySelector('.pbody');if(pb)pb.scrollTop=0}else if(a=='bpback')busPop(+d.b);
+ else if(a=='busrm2'){const b=info(d.k).bus;if(confirm('Remove this student from Bus '+b+'?')){await setInfo(d.k,{bus:null,seat:null},true);toast('Removed from Bus '+b);render()}busPop(b)}
+ else if(a=='rtile')roomMoveModal(d.k);else if(a=='rback')roomPop(d.h,d.r);
+ else if(a=='rrm'){await setInfo(d.k,{hid:null,rid:null},true);toast('Removed from room');render();roomPop(d.h,d.r)}
+ else if(a=='rmok'){const v=$('rmv').value;if(!v)return toast('Choose a room to move to');const[h,r]=v.split('|'),R=(C().hotels||[]).find(x=>x.id==h).rooms.find(x=>x.id==r);if(rcount(r)>=R.cap)return toast('Room '+R.no+' is full');await setInfo(d.k,{hid:h,rid:r},true);toast(S(d.k).n+' moved to Room '+R.no);render();roomPop(d.h,d.r)}
  else if(a=='bpadd'){calcBC();const b=+d.b,k=d.k;if(info(k).bus)return toast('Already in Bus '+info(k).bus);if((BC[b]||0)>=capOf(b))return toast('Bus '+b+' is full');await setInfo(k,{bus:b,seat:null},true);ensurePn();toast('Added '+S(k).n+' to Bus '+b);repop(true);render()}
  else if(a=='prof')profPop(d.k);
- else if(a=='hotel')hotelPop(d.h);else if(a=='room')roomPop(d.h,d.r,true);else if(a=='hpback')hotelPop(d.h);
+ else if(a=='hotel')hotelPop(d.h);else if(a=='room'){roomPop(d.h,d.r,true);const pb=document.querySelector('.pbody');if(pb)pb.scrollTop=0}else if(a=='hpback')hotelPop(d.h);
  else if(a=='hpadd'){const k=d.k,H=c.hotels||[],h=H.find(x=>x.id==d.h),r=h.rooms.find(x=>x.id==d.r);if(info(k).rid)return toast('Already placed in a room');if(rcount(d.r)>=r.cap)return toast('Room '+r.no+' is full');await setInfo(k,{hid:d.h,rid:d.r},true);toast('Added '+S(k).n+' to Room '+r.no);repop(true);render()}
  else if(a=='addhotel')hotelForm();
  else if(a=='hotelok'){const n=$('hn').value.trim();if(!n)return toast('Enter the hotel name');if((c.hotels||[]).some(x=>x.name.toLowerCase()==n.toLowerCase()))return toast('This hotel already exists');
