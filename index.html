@@ -2950,6 +2950,42 @@
         zoom: 1 !important
       }
     }
+
+    /* ===== Incharge list: exactly one A4 landscape page ===== */
+    .lst { --rh: 7mm; --fs: 9pt }
+    .lt td { height: var(--rh) !important; padding: 0 4px !important; font-size: var(--fs) !important; line-height: 1.15; vertical-align: middle }
+    .lt th { padding: 3px 4px !important }
+    @media print {
+      html, body { height: auto !important; overflow: visible !important }
+      .lst {
+        width: 297mm !important; height: 209mm !important; max-width: none !important;
+        margin: 0 !important; padding: 6mm 8mm 5mm !important; border: 0 !important;
+        display: flex !important; flex-direction: column !important; overflow: hidden !important;
+        break-after: avoid !important; page-break-after: avoid !important; zoom: 1 !important
+      }
+      .lst .lt { flex: none }
+      .lst .lf { margin-top: auto !important; padding-top: 6px }
+      .lst .lh { padding-bottom: 4px }
+      .lst .li { margin: 5px 0 !important }
+    }
+
+    /* ===== Dashboard clickable boxes + student sheet ===== */
+    .kc.cl { cursor: pointer }
+    .kc.cl:after { }
+    .kc.cl .go { position: absolute; right: 12px; top: 12px; font-size: 11px; font-weight: 700; color: #1d4ed8; background: #e8efff; border-radius: 20px; padding: 2px 9px }
+    .kc.cl:hover { outline: 2px solid #1d4ed8 }
+    .sech { font-weight: 800; font-size: 15px; margin: 18px 2px 8px; color: #0a1f5c }
+    .dtool { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 16px; border-bottom: 1px solid #e0e6f1; background: #f8faff }
+    .dtool input { flex: 1; min-width: 160px }
+    .dchips { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px 0 }
+    .dwrap { overflow: auto; padding: 8px 16px 16px; max-height: calc(100dvh - 230px) }
+    .dt { width: 100%; border-collapse: collapse; font-size: 13px }
+    .dt th { position: sticky; top: 0; background: #0a1f5c; color: #fff; padding: 7px 8px; z-index: 1 }
+    .dt td { padding: 6px 8px; border-bottom: 1px solid #e0e6f1; white-space: nowrap }
+    .dt tr:nth-child(even) td { background: #f8faff }
+    .bpill { background: #0a1f5c; color: #fff; border-radius: 8px; padding: 2px 9px; font-weight: 800; font-size: 12px }
+    .bpill.none { background: #fef3c7; color: #b45309 }
+    .sx[data-a] { cursor: pointer }
   </style>
 </head>
 
@@ -3039,13 +3075,14 @@
     function showList(b) {
       POP = null; const c = C(), I = c.bi[b] || {}, cap = capOf(b), TK = 7, l = D.filter(s => info(s.k).bus == b).sort((x, y) => (+info(x.k).seat || 999) - (+info(y.k).seat || 999) || (x.y == 3) - (y.y == 3) || x.s.localeCompare(y.s) || x.r.localeCompare(y.r, undefined, { numeric: true }));
       if (!l.length) return toast('No students in Bus ' + b); PL = { list: [], title: '' };
+      const rh = Math.max(4.4, Math.min(8, 146 / (l.length + 0.5))).toFixed(2), fs = rh < 5.6 ? 8 : rh < 6.8 ? 8.5 : 9;
       const ics = [[I.inc, I.ph], [I.inc2, I.ph2]].filter(x => x[0] || x[1]), rows = l.map((s, i) => { const o = info(s.k); return `<tr><td>${i + 1}</td><td>${pnf(s)}</td><td>${o.seat || ''}</td><td><b>${esc(s.n)}</b></td><td>${esc(s.f)}</td><td>${s.y == 3 ? 'Ref: ' + esc(s.ref) : esc(s.s) + ' / ' + esc(s.r)}</td><td>${esc([o.ph, o.ph2].filter(Boolean).join(' / '))}</td>${'<td class="ck"></td>'.repeat(TK)}</tr>` }).join('');
-      modal(`<div class="tools noprint" style="max-width:760px"><b>Bus ${b} – incharge list</b><span class="k">${l.length} passengers</span><button class="btn pri" data-a="print">Print / Save PDF</button><button class="btn" data-a="x">Close</button><span class="k" style="width:100%">Choose <b>Save as PDF</b>, paper size A4, <b>Landscape</b>, Margins: Default.</span></div>
- <div class="pgs"><div class="lst"><div class="lh"><img src="${LOGO}" alt=""><div><b>KIPS COLLEGE SHEIKHUPURA – BOYS (SARGODHA ROAD CAMPUS)</b><span>Passenger list · ${esc(c.trip)}${c.dest ? ' · ' + esc(c.dest) : ''}</span></div><div class="lb">BUS ${b}</div></div>
+      modal(`<div class="tools noprint" style="max-width:760px"><b>Bus ${b} – incharge list</b><span class="k">${l.length} passengers</span><button class="btn pri" data-a="print">Print / Save PDF</button><button class="btn" data-a="x">Close</button><span class="k" style="width:100%">Choose <b>Save as PDF</b>, paper size A4, <b>Landscape</b>, Margins: <b>None</b>, Scale: <b>100%</b>. It fits on one page automatically.</span></div>
+ <div class="pgs"><div class="lst" style="--rh:${rh}mm;--fs:${fs}pt"><div class="lh"><img src="${LOGO}" alt=""><div><b>KIPS COLLEGE SHEIKHUPURA – BOYS (SARGODHA ROAD CAMPUS)</b><span>Passenger list · ${esc(c.trip)}${c.dest ? ' · ' + esc(c.dest) : ''}</span></div><div class="lb">BUS ${b}</div></div>
  <div class="li">${ics.map((x, j) => `<span><b>Incharge ${j + 1}:</b> ${esc(x[0]) || '—'} ☎ ${esc(x[1]) || '—'}</span>`).join('') || '<span><b>Incharge:</b> —</span>'}<span><b>Passengers:</b> ${l.length} / ${cap}</span></div>
  <table class="lt"><thead><tr><th>#</th><th>Pass</th><th>Seat</th><th>Student name</th><th>Father name</th><th>Section / Roll #</th><th>Contact</th>${'<th class="ck">✓</th>'.repeat(TK)}</tr></thead><tbody>${rows}</tbody></table>
  <div class="lf"><span>Bus Incharge</span><span class="dv">Software Developed by: Hamnan Ali</span><span>Principal / Trip Head</span></div></div></div>`);
-      $('pgs').textContent = '@page{size:A4 landscape;margin:8mm}'
+      $('pgs').textContent = '@page{size:A4 landscape;margin:0}'
     }
     const nz = x => cl(x).toUpperCase().replace(/[^A-Z0-9]/g, ''); let PI = {};
     async function readTab(files) { const out = []; for (const f of files) { const wb = XLSX.read(await f.arrayBuffer(), { type: 'array' }); wb.SheetNames.forEach(sn => { const R = XLSX.utils.sheet_to_json(wb.Sheets[sn], { header: 1, defval: '' }), h = R.findIndex(r => r.some(c => /roll|name/i.test(cl(c)))); if (h < 0) return; const H = R[h].map(c => cl(c).toLowerCase()), fi = re => H.findIndex(c => re.test(c)); out.push({ R: R.slice(h + 1), iR: fi(/roll/), iN: H.findIndex(c => c.includes('name') && !/father|guardian/.test(c)), iF: fi(/father|guardian/), iP: fi(/contact|phone|mobile|cell|whatsapp/), iRef: fi(/ref/), iA: fi(/amount|received|paid/) }) }) } return out }
@@ -3236,15 +3273,42 @@
     const chipc = (y, s) => { const a = D.filter(d => d.y == y && d.s == s); return a.filter(d => st(d.k) == 'Paid').length + '/' + a.length };
     const PV = {}; function cnt() { document.querySelectorAll('#main [data-n]').forEach(e => { const to = +e.dataset.n, k = e.dataset.k, from = PV[k] || 0, fm = e.dataset.f == 'rs' ? v => rs(v) : v => Math.round(v).toLocaleString('en-US'); PV[k] = to; if (from == to) { e.textContent = fm(to); return } const t0 = performance.now(); (function f(tm) { const p = Math.min(1, (tm - t0) / 800); e.textContent = fm(from + (to - from) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f) })(t0) }) }
     function calcBC() { BC = {}; D.forEach(s => { const b = info(s.k).bus; if (b) BC[b] = (BC[b] || 0) + 1 }) }
+
+    let DL = { l: [], t: 'bus', b: 0 };
+    const DT = { bus: ['🚌 Students in buses', 'Every student with a seat – with bus number'], wait: ['⏳ Paid – waiting for a bus', 'Payment done but not yet placed in any bus'], paid: ['✅ Payment done', 'All students whose payment is complete'], pend: ['⚠️ Payment pending', 'Students who have not completed payment'] };
+    function dlist(t, b) {
+      POP = null; b = +b || 0; const bo = x => info(x.k).bus || 999;
+      let all = D.filter(s => t == 'bus' ? info(s.k).bus : t == 'wait' ? (!info(s.k).bus && elig(s)) : t == 'paid' ? st(s.k) == 'Paid' : st(s.k) != 'Paid');
+      all.sort((x, y) => bo(x) - bo(y) || (+info(x.k).seat || 999) - (+info(y.k).seat || 999) || (x.y == 3) - (y.y == 3) || x.s.localeCompare(y.s) || x.r.localeCompare(y.r, undefined, { numeric: true }));
+      const l = b == -1 ? all.filter(s => !info(s.k).bus) : b > 0 ? all.filter(s => info(s.k).bus == b) : all;
+      DL = { l, t, b };
+      const cc = {}; all.forEach(s => { const x = info(s.k).bus || 0; cc[x] = (cc[x] || 0) + 1 });
+      let chips = '';
+      if (t == 'bus' || t == 'paid') {
+        chips = `<div class="dchips"><button class="chip ${b == 0 ? 'on' : ''}" data-a="dl" data-t="${t}" data-b="0">All <small>${all.length}</small></button>` + Array.from({ length: C().buses }, (_, i) => i + 1).filter(n => cc[n]).map(n => `<button class="chip ${b == n ? 'on' : ''}" data-a="dl" data-t="${t}" data-b="${n}">Bus ${n} <small>${cc[n]}</small></button>`).join('') + (t == 'paid' && cc[0] ? `<button class="chip ${b == -1 ? 'on' : ''}" data-a="dl" data-t="${t}" data-b="-1">No bus yet <small>${cc[0]}</small></button>` : '') + '</div>'
+      }
+      const rows = l.map((s, i) => { const o = info(s.k), bus = o.bus; return `<tr><td>${i + 1}</td><td>${bus ? `<span class="bpill">Bus ${bus}</span>` : '<span class="bpill none">No bus</span>'}</td><td>${o.seat || ''}</td><td><a class="lk" data-a="prof" data-k="${s.k}"><b>${esc(s.n)}</b></a></td><td>${esc(s.f)}</td><td>${s.y == 3 ? 'Outsider · ' + esc(s.ref || '') : esc(yn(s.y)) + ' · ' + esc(s.s)}</td><td>${esc(s.r)}</td><td>${esc([o.ph, o.ph2].filter(Boolean).join(' / '))}</td><td><span class="pill ${CL[st(s.k)]}">${st(s.k)}</span></td></tr>` }).join('');
+      modal(pshell(DT[t][0], `${l.length} student${l.length == 1 ? '' : 's'} · ${DT[t][1]}`, `<div class="dtool"><input id="dlq" type="search" placeholder="Search name / roll no / section"><button class="btn pay" data-a="dlx">⬇ Download Excel sheet</button></div>${chips}<div class="dwrap"><table class="dt"><thead><tr><th>#</th><th>Bus</th><th>Seat</th><th>Student</th><th>Father</th><th>Class / Section</th><th>Roll No</th><th>Contact</th><th>Status</th></tr></thead><tbody>${rows || '<tr><td colspan="9">No students here.</td></tr>'}</tbody></table></div>`))
+    }
+    function dlxls() {
+      const wb = XLSX.utils.book_new(), H = ['#', 'Bus', 'Seat', 'Pass No', 'Student', 'Father', 'Class / Section', 'Roll No', 'Contact', 'Status'];
+      const R = (l) => [H, ...l.map((s, i) => { const o = info(s.k); return [i + 1, o.bus ? 'Bus ' + o.bus : 'No bus', o.seat || '', o.pn ? pnf(s) : '', s.n, s.f || '', s.y == 3 ? 'Outsider · ' + (s.ref || '') : yn(s.y) + ' · ' + s.s, s.r, [o.ph, o.ph2].filter(Boolean).join(' / '), st(s.k)] })];
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(R(DL.l)), 'All');
+      if (DL.b == 0 && DL.t != 'pend') { const g = {}; DL.l.forEach(s => { const b = info(s.k).bus || 0; (g[b] = g[b] || []).push(s) }); Object.keys(g).sort((x, y) => x - y).forEach(b => XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(R(g[b])), b == 0 ? 'No bus' : 'Bus ' + b)) }
+      XLSX.writeFile(wb, 'KIPS_Trip_' + DL.t + '_list.xlsx')
+    }
+    document.addEventListener('input', e => { if (e.target.id != 'dlq') return; const v = e.target.value.toLowerCase(); document.querySelectorAll('.dt tbody tr').forEach(r => r.style.display = r.textContent.toLowerCase().includes(v) ? '' : 'none') });
     function dash() {
-      const c = C(), a = stats(D), out = D.filter(s => s.y == 3), own = D.length - out.length, outPaid = out.filter(s => st(s.k) == 'Paid').length, used = Object.values(BC).reduce((x, y) => x + y, 0), tot = totSeats(), exp = a.f;
+      const c = C(), a = stats(D), out = D.filter(s => s.y == 3), own = D.length - out.length, outPaid = out.filter(s => st(s.k) == 'Paid').length, used = Object.values(BC).reduce((x, y) => x + y, 0), tot = totSeats(), exp = a.f, inBus = D.filter(s => info(s.k).bus).length, waiting = D.filter(s => !info(s.k).bus && elig(s)).length;
       const days = c.date ? Math.ceil((new Date(c.date) - new Date(new Date().toDateString())) / 864e5) : null;
       const N = (k, v, f) => `<span data-k="${k}" data-n="${v}"${f ? ` data-f="${f}"` : ''}>0</span>`, L = 339.3, dp = a.t ? a.Paid / a.t : 0, pp = a.t ? a.Partial / a.t : 0;
       const seg = (len, off, col) => len > 0 ? `<circle class="sg" cx="75" cy="75" r="54" stroke="${col}" stroke-dasharray="${len * L} ${L}" stroke-dashoffset="${-off * L}"/>` : '';
-      const kc = (ic, k, v, l, sub, ac, f) => `<div class="kc" style="--ac:${ac}"><div class="ic">${ic}</div><div class="kn">${N(k, v, f)}</div><div class="kl">${l}</div><small>${sub}</small></div>`;
+      const kc = (ic, k, v, l, sub, ac, f, t) => `<div class="kc${t ? ' cl' : ''}" ${t ? `data-a="dl" data-t="${t}" data-b="0" title="Click to see the list"` : ''} style="--ac:${ac}">${t ? '<span class="go">View list ›</span>' : ''}<div class="ic">${ic}</div><div class="kn">${N(k, v, f)}</div><div class="kl">${l}</div><small>${sub}</small></div>`;
       let h = `<div class="hero"><div class="hr"><img src="${LOGO}" alt="KIPS"><div><h1>Trip Command Center</h1><p>${esc(c.trip)} · KIPS College Sheikhupura (Boys), Sargodha Road Campus</p>
  <span class="chp">📍 ${esc(c.dest) || 'Destination not set'}</span><span class="chp">📅 ${c.date ? new Date(c.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Date not set'}</span>${days == null ? '' : `<span class="chp">⏳ ${days > 0 ? days + ' days to go' : days == 0 ? 'Trip day!' : 'Trip completed'}</span>`}<span class="chp">💳 Fee ${rs(c.fee)}</span></div></div></div>
- <div class="kg">${kc('👥', 't', a.t, 'Total students', own + ' college · ' + out.length + ' outsiders', '#dbeafe')}${kc('✅', 'p', a.Paid, 'Payment done', (a.t - a.Paid) + ' still pending', '#d9f5ea')}${kc('🧑‍🤝‍🧑', 'o', out.length, 'Outsiders', outPaid + ' paid', '#fde9c7')}${kc('💰', 'm', a.c, 'Amount received', 'of ' + rs(exp) + ' expected', '#d9f5ea', 'rs')}${kc('🚌', 'b', c.buses, 'Buses', tot + ' seats in total', '#dbeafe')}${kc('💺', 's', tot - used, 'Seats remaining', used + ' seats booked', '#e0e7ff')}</div>
+ <div class="kg">${kc('👥', 't', a.t, 'Total students', own + ' college · ' + out.length + ' outsiders', '#dbeafe')}${kc('✅', 'p', a.Paid, 'Payment done', (a.t - a.Paid) + ' still pending', '#d9f5ea', '', 'paid')}${kc('🧑‍🤝‍🧑', 'o', out.length, 'Outsiders', outPaid + ' paid', '#fde9c7')}${kc('💰', 'm', a.c, 'Amount received', 'of ' + rs(exp) + ' expected', '#d9f5ea', 'rs')}${kc('🚌', 'b', c.buses, 'Buses', tot + ' seats in total', '#dbeafe')}${kc('💺', 's', tot - used, 'Seats remaining', used + ' seats booked', '#e0e7ff')}</div>
+ <div class="sech">🚌 Bus allocation &amp; payments — tap a box to see the student sheet</div>
+ <div class="kg">${kc('🚌', 'ib', inBus, 'Students in buses', 'Bus-wise list with bus numbers', '#dbeafe', '', 'bus')}${kc('⏳', 'wb', waiting, 'Paid – waiting for a bus', 'Payment done, no bus yet', '#fde9c7', '', 'wait')}${kc('✅', 'pd', a.Paid, 'Payment done', 'Complete payment (all students)', '#d9f5ea', '', 'paid')}${kc('⚠️', 'pn', a.t - a.Paid, 'Payment pending', 'Not fully paid yet', '#fee2e2', '', 'pend')}</div>
  <div class="cg"><div class="card"><b>Payment status</b><div class="dw"><svg class="dn" viewBox="0 0 150 150"><circle cx="75" cy="75" r="54" stroke="#e6edfa"/>${seg(dp, 0, '#0f9d6b')}${seg(pp, dp, '#2563eb')}${seg(1 - dp - pp, dp + pp, '#f59e0b')}</svg><div class="dc"><b>${Math.round(dp * 100)}%</b><small>paid</small></div></div>
   <div class="lgd"><span><i style="background:#0f9d6b"></i>Payment done <b>${a.Paid}</b></span><span><i style="background:#2563eb"></i>Partial <b>${a.Partial}</b></span><span><i style="background:#f59e0b"></i>Pending <b>${a.Pending}</b></span></div>
   <div class="k" style="margin-top:14px">Amount received vs expected</div><div class="bar2"><i style="width:${exp ? Math.min(100, a.c / exp * 100) : 0}%"></i></div><div class="k">${rs(a.c)} / ${rs(exp)}</div></div>
@@ -3279,7 +3343,7 @@
     }
     function buses() {
       const c = C(), tot = totSeats(), used = Object.values(BC).reduce((x, y) => x + y, 0), un = D.filter(s => !info(s.k).bus && elig(s)).length;
-      let h = `<div class="sum"><div class="sx"><b>${c.buses}</b><span>Buses</span></div><div class="sx"><b>${used}</b><span>Seats booked</span></div><div class="sx"><b>${tot - used}</b><span>Seats free</span></div><div class="sx"><b>${un}</b><span>Waiting for a bus</span></div>${c.buses > 1 && !BC[c.buses] ? `<button class="btn" data-a="rmbus">Remove last bus</button>` : ''}</div><div class="bgrid">`;
+      let h = `<div class="sum"><div class="sx"><b>${c.buses}</b><span>Buses</span></div><div class="sx" data-a="dl" data-t="bus" data-b="0"><b>${used}</b><span>Seats booked</span></div><div class="sx"><b>${tot - used}</b><span>Seats free</span></div><div class="sx" data-a="dl" data-t="wait" data-b="0"><b>${un}</b><span>Waiting for a bus</span></div>${c.buses > 1 && !BC[c.buses] ? `<button class="btn" data-a="rmbus">Remove last bus</button>` : ''}</div><div class="bgrid">`;
       for (let b = 1; b <= c.buses; b++) {
         const I = c.bi[b] || {}, cap = capOf(b), n = BC[b] || 0, ic = [I.inc, I.inc2].filter(Boolean).map(esc).join(' · ');
         h += `<div class="bcard ${n >= cap ? 'full' : ''}" data-a="bus" data-b="${b}" style="animation-delay:${b * 35}ms"><div class="bnum">${b}</div><div class="binfo"><b>Bus ${b}</b><span>${ic || 'Tap to set incharge'}</span><div class="bar2"><i style="width:${Math.min(100, n / cap * 100)}%"></i></div><small>${n}/${cap} booked · ${cap - n} left</small></div>${n >= cap ? '<span class="pill ok">Complete</span>' : ''}</div>`
@@ -3337,7 +3401,7 @@
         if (await put('payments', d.k, { pays: [...ps, { a: amt, at: now.toISOString(), rc, m: $('pm').value }] })) showRc(d.k, ps.length)
       }
       else if (a == 'rc') showRc(d.k, +d.i);
-      else if (a == 'x') close(); else if (a == 'print') window.print();
+      else if (a == 'x') close(); else if (a == 'print') window.print(); else if (a == 'dl') dlist(d.t, d.b); else if (a == 'dlx') dlxls();
       else if (a == 'undo') { if (!confirm('Cancel this payment record?')) return; const ps = pays(d.k).filter((_, j) => j != d.i); close(); await put('payments', d.k, ps.length ? { pays: ps } : null) }
       else if (a == 'wa') {
         const ph = $('wph').value, n = normPh(ph); if (!n) return toast('Enter a valid WhatsApp number (e.g. 0300 1234567)');
