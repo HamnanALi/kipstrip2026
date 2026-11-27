@@ -2806,22 +2806,61 @@
       overscroll-behavior: contain
     }
 
+    #mb {
+      min-width: 0;
+      max-width: 100%
+    }
+
     .pgrid {
-      min-width: 0
+      min-width: 0;
+      width: 100%
     }
 
     .pgrid .pcol {
       min-width: 0;
+      max-width: 100%
+    }
+
+    .tl>div {
+      min-width: 0;
+      flex: 1;
       overflow: hidden
     }
 
     .tls.big {
-      min-width: 0
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 7px;
+      min-width: 0;
+      width: 100%;
+      max-height: 46vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 8px 6px
     }
 
-    .tls.big {
-      max-height: none;
-      overflow: visible
+    .tls.big .tl {
+      flex: none;
+      width: 100%;
+      padding-right: 30px
+    }
+
+    .tls.big .tl b,
+    .tls.big .tl small {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      word-break: break-word
+    }
+
+    .tls.big .tx {
+      top: 50%;
+      right: 8px;
+      transform: translateY(-50%)
+    }
+
+    .tls.big .tl:hover .tx {
+      transform: translateY(-50%) scale(1.1)
     }
 
     .btn.danger {
@@ -3049,7 +3088,7 @@
     const pshell = (t, sub, inner, badge) => `<div class="pop"><div class="ph3">${badge || ''}<div class="pt3"><b>${t}</b><span>${sub || ''}</span></div><button class="pcx" data-a="x" title="Close">✕</button></div><div class="pbody">${inner}</div></div>`;
     const busList = b => D.filter(s => info(s.k).bus == b).sort((x, y) => (+info(x.k).seat || 999) - (+info(y.k).seat || 999) || x.s.localeCompare(y.s) || x.r.localeCompare(y.r, undefined, { numeric: true }));
     const tileH = (s, cl, rm, extra) => `<div class="tl" ${cl ? `data-a="${cl}" data-k="${s.k}"` : ''} title="${esc(s.n)}"><button class="tx" data-a="${rm}" data-k="${s.k}" title="Remove">✕</button><i class="av">${ini(s.n)}</i><div><b>${esc(s.n)}</b><small>${s.y == 3 ? 'Outsider · ' + esc(s.ref || '') : s.s + ' · ' + esc(s.r)}</small>${extra || ''}</div></div>`;
-    const sugH = (l, act, ex) => l.map(s => `<div class="sg"><i class="av">${ini(s.n)}</i><span><b>${esc(s.n)}</b><small>${s.y == 3 ? 'Outsider · ' + esc(s.ref || '') : s.s + ' · ' + esc(s.r)}</small></span><button class="btn sm pri" data-a="${act}" data-k="${s.k}" ${ex}>＋ Add</button></div>`).join('');
+    const sugH = (l, act, ex, fn) => l.map(s => `<div class="sg"><i class="av">${ini(s.n)}</i><span><b>${esc(s.n)}</b><small>${s.y == 3 ? 'Outsider · ' + esc(s.ref || '') : s.s + ' · ' + esc(s.r)}</small></span>${fn ? fn(s) : `<button class="btn sm pri" data-a="${act}" data-k="${s.k}" ${ex}>＋ Add</button>`}</div>`).join('');
     function repop(f) { if (!POP) return; if (POP.t == 'bus') busPop(POP.b, f); else if (POP.t == 'hotel') hotelPop(POP.h); else if (POP.t == 'room') roomPop(POP.h, POP.r, f) }
     function rp() { if (!POP) return; const a = document.activeElement; if (a && a.closest && a.closest('#modal') && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return; repop() }
     function busPop(b, f) {
@@ -3064,8 +3103,17 @@
       if (f) setTimeout(() => { const e = $('bps'); e && innerWidth > 700 && e.focus({ preventScroll: true }) }, 40)
     }
     function busSug() {
-      const v = $('bps').value.trim().toLowerCase(), l = v ? D.filter(s => !info(s.k).bus && elig(s) && (s.n + ' ' + s.r + ' ' + (s.ref || '')).toLowerCase().includes(v)).slice(0, 8) : [];
-      $('bpr').innerHTML = sugH(l, 'bpadd', 'data-b="' + POP.b + '"') || (v ? '<div class="k" style="padding:10px">No match – the student may already be in a bus, or not fully paid.</div>' : '')
+      const raw = $('bps').value.trim(), v = raw.toLowerCase();
+      if (!v) { $('bpr').innerHTML = ''; return }
+      const l = D.filter(s => (s.n + ' ' + s.r + ' ' + (s.ref || '')).toLowerCase().includes(v))
+        .sort((a, b) => ((!info(b.k).bus && elig(b)) ? 1 : 0) - ((!info(a.k).bus && elig(a)) ? 1 : 0))
+        .slice(0, 8);
+      $('bpr').innerHTML = sugH(l, 'bpadd', 'data-b="' + POP.b + '"', s => {
+        const b = info(s.k).bus, ok = elig(s), stx = st(s.k);
+        if (b) return `<span class="pill ${b == POP.b ? 'ok' : 'pt'}">${b == POP.b ? 'In this bus' : 'In Bus ' + b}</span>`;
+        if (!ok) return `<span class="pill ${CL[stx]}">${stx == 'Partial' ? 'Partial (' + rs(paid(s.k)) + '/' + rs(feeOf(s.k)) + ')' : 'Fee Pending'}</span>`;
+        return `<button class="btn sm pri" data-a="bpadd" data-k="${s.k}" data-b="${POP.b}">＋ Add</button>`;
+      }) || `<div class="k" style="padding:10px">No student found matching "${esc(raw)}".</div>`;
     }
     function hotelPop(hid) {
       POP = { t: 'hotel', h: hid }; const H = (C().hotels || []).find(x => x.id == hid); if (!H) return close(); const rr = H.rooms || [], occ = rr.reduce((a, r) => a + rcount(r.id), 0), bd = rr.reduce((a, r) => a + (+r.cap || 0), 0);
